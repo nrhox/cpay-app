@@ -1,0 +1,40 @@
+import type { PaymentCode } from "../types";
+
+export const paymentCodes: PaymentCode[] = [
+  {
+    id: "pay-1",
+    userId: "usr-1",
+    walletId: "wal-1",
+    merchant: "Klinik Sehat",
+    code: "CP-581240",
+    amount: 420000,
+    note: "Health check",
+    status: "ACTIVE",
+    expiresAt: "2026-06-08T17:00:00.000Z",
+    createdAt: "2026-06-02T03:00:00.000Z",
+  },
+  {
+    id: "pay-2",
+    userId: "usr-1",
+    walletId: "wal-2",
+    merchant: "Jakarta Hotel",
+    code: "CP-193002",
+    amount: 780000,
+    note: "Reservation deposit",
+    status: "PAID",
+    expiresAt: "2026-06-04T17:00:00.000Z",
+    createdAt: "2026-06-01T01:10:00.000Z",
+  },
+  {
+    id: "pay-3",
+    userId: "usr-2",
+    walletId: "wal-3",
+    merchant: "Office Supplies",
+    code: "CP-774100",
+    amount: 1250000,
+    note: "Stationery order",
+    status: "ACTIVE",
+    expiresAt: "2026-06-06T17:00:00.000Z",
+    createdAt: "2026-06-02T04:00:00.000Z",
+  },
+];
