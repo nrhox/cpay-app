@@ -1,6 +1,11 @@
-import axios, { type AxiosError, type AxiosInstance, type AxiosRequestConfig } from "axios";
+import axios, {
+  type AxiosError,
+  type AxiosInstance,
+  type AxiosRequestConfig,
+} from "axios";
 
-const BASE_URL = import.meta.env.VITE_BACKEND_END_POINT ?? "http://localhost:3004";
+const BASE_URL =
+  import.meta.env.VITE_BACKEND_END_POINT ?? "http://localhost:3004";
 
 export interface ConfigAxiosRequest extends AxiosRequestConfig {
   _retry?: boolean;
