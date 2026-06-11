@@ -1,39 +1,61 @@
-import { Link } from "react-router";
+import { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
+import { Link, useSearchParams } from "react-router";
 import AdminListView, {
   type SortOption,
 } from "../../../components/admin/AdminListView";
-import { ApproveTopupRequest } from "../../../components/admin/ApproveTopupRequest";
 import { TopupTone } from "../../../components/admin/tone";
+import Loading from "../../../components/general/loading";
 import Badge from "../../../components/ui/Badge";
-import Button from "../../../components/ui/Button";
 import PageHeader from "../../../components/ui/PageHeader";
-import { selectTopups, useTopupStore } from "../../../stores/topup.store";
-import type { TopupRequest } from "../../../types";
+import { useAdminListAllTopups } from "../../../feature/admin";
 import { formatCurrency, formatDate } from "../../../utils/format";
-import { NewestFirst, TextCompare } from "../../../utils/sort";
+import type { ITopupRequest } from "../../../types/topup";
 
-const topupSortOptions: SortOption<TopupRequest>[] = [
+const topupSortOptions: SortOption<ITopupRequest>[] = [
+  {
+    label: "Status",
+    sort: "asc",
+    sortBy: "status",
+  },
   {
     label: "Request terbaru",
-    value: "requested-desc",
-    compare: (first, second) =>
-      NewestFirst(first.requestedAt, second.requestedAt),
+    sortBy: "requested_at",
+    sort: "desc",
   },
   {
     label: "Nominal terbesar",
-    value: "amount-desc",
-    compare: (first, second) => second.amount - first.amount,
-  },
-  {
-    label: "Status",
-    value: "status-asc",
-    compare: (first, second) => TextCompare(first.status, second.status),
+    sortBy: "amount",
+    sort: "desc",
   },
 ];
 
 export default function AdminTopupsPage() {
-  const topups = useTopupStore(selectTopups);
-  const cancelTopup = useTopupStore((state) => state.cancelTopup);
+  const { ref, inView } = useInView();
+  const [searchParams] = useSearchParams();
+
+  const q = searchParams.get("q") || "";
+  const sort_by = searchParams.get("sort_by") || "";
+  const sort = searchParams.get("sort") || "";
+
+  const {
+    data,
+    isLoading,
+    fetchNextPage,
+    isFetchingNextPage,
+    isFetching,
+    hasNextPage,
+  } = useAdminListAllTopups({
+    q,
+    sort,
+    sort_by,
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [fetchNextPage, hasNextPage, inView, isFetchingNextPage]);
 
   return (
     <div className="grid gap-5">
@@ -42,23 +64,20 @@ export default function AdminTopupsPage() {
         description="Approve atau cancel request pending."
       />
       <AdminListView
-        items={topups}
+        items={data?.pages?.flatMap((v) => v.data ?? []) || []}
         searchPlaceholder="Cari referensi, bank, status, atau user"
-        searchText={(topup) =>
-          `${topup.reference} ${topup.bankName} ${topup.status} ${topup.userId} ${topup.walletId}`
-        }
         sortOptions={topupSortOptions}
         renderItem={(topup) => (
           <div
-            key={topup.id}
+            key={topup._id}
             className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between"
           >
-            <Link to={`/admin/topups/${topup.id}`} className="min-w-0 flex-1">
+            <Link to={`/admin/topups/${topup._id}`} className="min-w-0 flex-1">
               <p className="text-primary text-sm font-semibold">
-                {topup.bankName} | {topup.reference}
+                {topup.wallet_id} | {topup.reference}
               </p>
               <p className="caption text-primary">
-                {formatDate(topup.requestedAt)} | {topup.userId}
+                {formatDate(topup.requested_at)} | {topup.user_id}
               </p>
             </Link>
             <div className="flex flex-wrap items-center gap-2">
@@ -66,25 +85,15 @@ export default function AdminTopupsPage() {
                 {formatCurrency(topup.amount)}
               </p>
               <Badge label={topup.status} tone={TopupTone(topup.status)} />
-              <Button
-                type="button"
-                disabled={topup.status !== "PENDING"}
-                onClick={() => ApproveTopupRequest(topup)}
-              >
-                Approve
-              </Button>
-              <Button
-                type="button"
-                variant="danger"
-                disabled={topup.status !== "PENDING"}
-                onClick={() => cancelTopup(topup.id)}
-              >
-                Cancel
-              </Button>
             </div>
           </div>
         )}
       />
+
+      {(hasNextPage || isFetching) && (
+        <div ref={ref} className="h-5 w-full"></div>
+      )}
+      {(isFetchingNextPage || isLoading) && <Loading />}
     </div>
   );
 }

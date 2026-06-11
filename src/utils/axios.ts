@@ -4,8 +4,8 @@ import axios, {
   type AxiosRequestConfig,
 } from "axios";
 
-const BASE_URL =
-  import.meta.env.VITE_BACKEND_END_POINT ?? "http://localhost:3004";
+export const BASE_URL_BACKEND =
+  import.meta.env.VITE_BACKEND_END_POINT ?? "http://localhost:3002";
 
 export interface ConfigAxiosRequest extends AxiosRequestConfig {
   _retry?: boolean;
@@ -15,7 +15,7 @@ export interface ConfigAxiosRequest extends AxiosRequestConfig {
 axios.defaults.withCredentials = true;
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: BASE_URL,
+  baseURL: BASE_URL_BACKEND,
   withCredentials: true,
 });
 
@@ -61,7 +61,7 @@ axiosInstance.interceptors.response.use(
 
       try {
         await axios.get("/api/auth/__refresh", {
-          baseURL: BASE_URL,
+          baseURL: BASE_URL_BACKEND,
           withCredentials: true,
         });
 

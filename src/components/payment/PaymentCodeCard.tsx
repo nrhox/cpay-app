@@ -1,5 +1,5 @@
 import { QrCode } from "lucide-react";
-import type { PaymentCode } from "../../types";
+import type { IPaymentCode } from "../../types/paymentCode";
 import { formatCurrency, formatDate } from "../../utils/format";
 import Badge, { PaymentTone } from "../ui/Badge";
 import Card from "../ui/Card";
@@ -7,7 +7,7 @@ import Card from "../ui/Card";
 export default function PaymentCodeCard({
   paymentCode,
 }: {
-  paymentCode: PaymentCode;
+  paymentCode?: IPaymentCode;
 }) {
   return (
     <Card>
@@ -16,17 +16,17 @@ export default function PaymentCodeCard({
           <QrCode size={22} />
         </div>
         <Badge
-          label={paymentCode.status}
-          tone={PaymentTone(paymentCode.status)}
+          label={paymentCode?.status ?? ""}
+          tone={PaymentTone(paymentCode?.status ?? "EXPIRED")}
         />
       </div>
-      <p className="subheading mt-4">{paymentCode.merchant}</p>
-      <p className="caption text-primary mt-1">{paymentCode.code}</p>
+      <p className="subheading mt-4">{paymentCode?.merchant ?? "-"}</p>
+      <p className="subheading text-primary mt-1">{paymentCode?.code ?? "-"}</p>
       <p className="text-primary mt-3 font-bold">
-        {formatCurrency(paymentCode.amount)}
+        {formatCurrency(paymentCode?.amount ?? 0)}
       </p>
       <p className="caption text-primary mt-2">
-        Expires {formatDate(paymentCode.expiresAt)}
+        Expires {formatDate(paymentCode?.expires_at ?? "")}
       </p>
     </Card>
   );

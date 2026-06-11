@@ -1,28 +1,45 @@
 import { ArrowRight } from "lucide-react";
-import { useState, type SubmitEvent } from "react";
+import { useEffect, useState, type SubmitEvent } from "react";
 import { useNavigate } from "react-router";
 import FormInput from "../../components/forms/FormInput";
 import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
 import PageHeader from "../../components/ui/PageHeader";
+import { useGetOneWallet } from "../../feature/wallet";
 
 export default function TransferPage() {
   const navigate = useNavigate();
   const [destinationAccount, setDestinationAccount] = useState("");
   const [destinationError, setDestinationError] = useState("");
+  const [isSubmit, setIsSubmit] = useState(false);
+
+  const { isLoading, error, isSuccess, data } = useGetOneWallet(
+    destinationAccount,
+    {
+      enabled: isSubmit,
+    },
+  );
+
+  useEffect(() => {
+    if (isSuccess && destinationAccount.trim() !== "" && data.data) {
+      navigate("/transfer/summary", {
+        state: { wallet: data.data },
+      });
+    }
+  }, [data?.data, destinationAccount, isSuccess, navigate]);
 
   const handleSubmit = (event: SubmitEvent) => {
-    event.preventDefault();
-    const nextDestination = destinationAccount.trim();
+    if (!isLoading) {
+      event.preventDefault();
+      const nextDestination = destinationAccount.trim();
 
-    if (nextDestination.length < 8) {
-      setDestinationError("Nomor rekening terlalu pendek");
-      return;
+      if (nextDestination.length !== 12) {
+        setDestinationError("Nomor rekening tidak ada");
+        return;
+      }
+
+      setIsSubmit(true);
     }
-
-    navigate("/transfer/summary", {
-      state: { destinationAccount: nextDestination },
-    });
   };
 
   return (
@@ -37,14 +54,16 @@ export default function TransferPage() {
             label="Destination account"
             name="destinationAccount"
             inputMode="numeric"
+            disabled={isLoading}
             value={destinationAccount}
             onChange={(event) => {
               setDestinationAccount(event.target.value.replace(/\D/g, ""));
               setDestinationError("");
+              setIsSubmit(false);
             }}
-            error={destinationError}
+            error={error?.response?.data.message || destinationError}
           />
-          <Button type="submit">
+          <Button disabled={isLoading} type="submit">
             Berikutnya
             <ArrowRight size={18} />
           </Button>

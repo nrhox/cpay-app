@@ -1,6 +1,6 @@
 import { Wallet as WalletIcon } from "lucide-react";
-import type { Wallet } from "../../types";
-import { formatCurrency } from "../../utils/format";
+import type { IWallet } from "../../types/wallet";
+import { formatAccount, formatCurrency } from "../../utils/format";
 import Badge from "../ui/Badge";
 import Card from "../ui/Card";
 
@@ -8,7 +8,7 @@ export default function WalletCard({
   wallet,
   active,
 }: {
-  wallet: Wallet;
+  wallet?: IWallet;
   active?: boolean;
 }) {
   return (
@@ -18,14 +18,16 @@ export default function WalletCard({
           <WalletIcon size={22} />
         </div>
         <Badge
-          label={active ? "Active" : wallet.status}
-          tone={wallet.status === "ACTIVE" ? "success" : "danger"}
+          label={wallet?.status === "ACTIVE" ? "Active" : "Suspend"}
+          tone={wallet?.status === "ACTIVE" ? "success" : "danger"}
         />
       </div>
-      <p className="subheading mt-4">{wallet.name}</p>
-      <p className="caption text-primary mt-1">{wallet.accountNumber}</p>
+      <p className="subheading mt-4">{wallet?.name}</p>
+      <p className="caption text-primary mt-1">
+        {formatAccount(wallet?.account_number ?? "")}
+      </p>
       <p className="text-primary mt-4 text-xl font-bold">
-        {formatCurrency(wallet.balance)}
+        {formatCurrency(wallet?.balance ?? 0)}
       </p>
     </Card>
   );

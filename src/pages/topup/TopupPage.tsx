@@ -1,53 +1,60 @@
 import { useFormik } from "formik";
 import { Banknote } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import * as yup from "yup";
 import FormInput from "../../components/forms/FormInput";
 import FormSelect from "../../components/forms/FormSelect";
+import Loading from "../../components/general/loading";
 import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
 import PageHeader from "../../components/ui/PageHeader";
-import { selectCurrentUser, useAuthStore } from "../../stores/auth.store";
-import { useTopupStore } from "../../stores/topup.store";
-import {
-  selectActiveWalletId,
-  selectWallets,
-  useWalletStore,
-} from "../../stores/wallet.store";
-import type { TopupForm } from "../../types";
+import { useMutateData } from "../../feature/hooks";
+import { useGetAllWallet } from "../../feature/wallet";
+import type { IRequestTopupRequest } from "../../types/request";
+import type { ITopupRequest } from "../../types/topup";
 
 const topupSchema = yup.object({
-  walletId: yup.string().required("Wallet wajib dipilih"),
+  wallet_number: yup.string().required("Wallet wajib dipilih"),
   amount: yup
     .number()
     .min(50000, "Minimal Rp50.000")
     .required("Nominal wajib diisi"),
-  bankName: yup.string().required("Bank wajib dipilih"),
-  reference: yup.string().required("Referensi wajib diisi"),
 });
 
 export default function TopupPage() {
-  const currentUser = useAuthStore(selectCurrentUser);
-  const activeWalletId = useWalletStore(selectActiveWalletId);
-  const wallets = useWalletStore(selectWallets).filter(
-    (wallet) => wallet.userId === currentUser.id,
-  );
-  const createTopup = useTopupStore((state) => state.createTopup);
-  const formik = useFormik<TopupForm>({
-    initialValues: {
-      walletId: activeWalletId,
-      amount: 50000,
-      bankName: "BCA",
-      reference: "",
-    },
-    validationSchema: topupSchema,
-    onSubmit: (values, helpers) => {
-      createTopup(currentUser.id, values);
-      helpers.resetForm({
-        values: { ...values, amount: 50000, reference: "" },
+  const { data, isLoading } = useGetAllWallet();
+  const navigate = useNavigate();
+
+  const { mutate, isPending } = useMutateData<
+    IRequestTopupRequest,
+    ITopupRequest
+  >("POST", "/api/v1/top-up", ["request_top_up"], {
+    onError: (err) => {
+      const errRes = err.response?.data?.errors || [];
+      errRes.forEach((v) => {
+        setFieldError(v.field, v.message);
       });
     },
+    onSuccess: (data) => {
+      navigate(`/transactions/${data.data?.reference}`);
+    },
   });
+
+  const { values, setFieldError, handleChange, errors, touched, handleSubmit } =
+    useFormik<IRequestTopupRequest>({
+      initialValues: {
+        wallet_number: "",
+        amount: 50000,
+      },
+      validationSchema: topupSchema,
+      onSubmit: (values) => {
+        mutate(values);
+      },
+    });
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className="grid gap-5">
@@ -63,47 +70,29 @@ export default function TopupPage() {
         }
       />
       <Card className="max-w-2xl">
-        <form className="grid gap-4" onSubmit={formik.handleSubmit}>
+        <form className="grid gap-4" onSubmit={handleSubmit}>
           <FormSelect
             label="Wallet"
-            name="walletId"
-            value={formik.values.walletId}
-            onChange={formik.handleChange}
-            options={wallets.map((wallet) => ({
+            name="wallet_number"
+            value={values.wallet_number}
+            disabled={isPending}
+            onChange={handleChange}
+            options={(data?.data || []).map((wallet) => ({
               label: wallet.name,
-              value: wallet.id,
+              value: wallet.account_number,
             }))}
-            error={formik.touched.walletId ? formik.errors.walletId : undefined}
+            error={touched.wallet_number ? errors.wallet_number : undefined}
           />
           <FormInput
             label="Amount"
+            disabled={isPending}
             name="amount"
             type="number"
-            value={formik.values.amount}
-            onChange={formik.handleChange}
-            error={formik.touched.amount ? formik.errors.amount : undefined}
+            value={values.amount}
+            onChange={handleChange}
+            error={touched.amount ? errors.amount : undefined}
           />
-          <FormSelect
-            label="Bank"
-            name="bankName"
-            value={formik.values.bankName}
-            onChange={formik.handleChange}
-            options={["BCA", "Mandiri", "BNI", "BRI"].map((bank) => ({
-              label: bank,
-              value: bank,
-            }))}
-            error={formik.touched.bankName ? formik.errors.bankName : undefined}
-          />
-          <FormInput
-            label="Transfer reference"
-            name="reference"
-            value={formik.values.reference}
-            onChange={formik.handleChange}
-            error={
-              formik.touched.reference ? formik.errors.reference : undefined
-            }
-          />
-          <Button type="submit">
+          <Button type="submit" disabled={isPending}>
             <Banknote size={18} />
             Create Request
           </Button>

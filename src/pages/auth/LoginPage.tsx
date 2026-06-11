@@ -1,62 +1,55 @@
-import { useFormik } from "formik";
-import { LogIn } from "lucide-react";
-import { useNavigate } from "react-router";
-import * as yup from "yup";
-import FormInput from "../../components/forms/FormInput";
-import Button from "../../components/ui/Button";
+import BRAND from "../../assets/CPay_Logo.svg";
+import GITHUB_LOGO from "../../assets/GitHub_Logo.svg";
+import GOOGLE_LOGO from "../../assets/Goggle_Logo.svg";
 import Card from "../../components/ui/Card";
-import { useAuthStore } from "../../stores/auth.store";
-import type { LoginForm } from "../../types";
+import { BASE_URL_BACKEND } from "../../utils/axios";
 
-const loginSchema = yup.object({
-  email: yup.string().email("Email tidak valid").required("Email wajib diisi"),
-  password: yup
-    .string()
-    .min(6, "Minimal 6 karakter")
-    .required("Password wajib diisi"),
-});
+type tProvider = {
+  label: string;
+  name: string;
+  brandLogo: string;
+};
+
+const listProviders: tProvider[] = [
+  {
+    brandLogo: GITHUB_LOGO,
+    label: "Github",
+    name: "github",
+  },
+  {
+    brandLogo: GOOGLE_LOGO,
+    label: "Google",
+    name: "google",
+  },
+];
 
 export default function LoginPage() {
-  const navigate = useNavigate();
-  const login = useAuthStore((state) => state.login);
-  const formik = useFormik<LoginForm>({
-    initialValues: { email: "nadia@cpay.local", password: "password" },
-    validationSchema: loginSchema,
-    onSubmit: (values) => {
-      login(values.email);
-      navigate("/dashboard");
-    },
-  });
-
   return (
     <main className="bg-background grid min-h-screen place-items-center px-4">
       <Card className="w-full max-w-md">
-        <h1 className="heading text-primary-700">CPay</h1>
-        <p className="paragraph text-primary mt-2">
+        <img src={BRAND} className="h-14" alt="cpay" />
+        <p className="paragraph text-primary mt-1">
           Masuk ke digital wallet dan banking workspace Anda.
         </p>
-        <form className="mt-6 grid gap-4" onSubmit={formik.handleSubmit}>
-          <FormInput
-            label="Email"
-            name="email"
-            type="email"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            error={formik.touched.email ? formik.errors.email : undefined}
-          />
-          <FormInput
-            label="Password"
-            name="password"
-            type="password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            error={formik.touched.password ? formik.errors.password : undefined}
-          />
-          <Button type="submit" className="w-full">
-            <LogIn size={18} />
-            Login
-          </Button>
-        </form>
+        <div className="mt-4">
+          <p className="paragraph text-primary mb-2">Masuk dengan</p>
+          <div className="space-y-2">
+            {listProviders.map((provider) => (
+              <a
+                key={provider.name}
+                href={`${BASE_URL_BACKEND}/api/auth/${provider.name}`}
+                className="border-light-gray bg-surface flex items-center rounded-lg border px-3 py-2 text-base shadow-sm select-none hover:bg-gray-100 active:bg-gray-200"
+              >
+                <img
+                  src={provider.brandLogo}
+                  alt={provider.name + " logo"}
+                  className="mr-4 h-8"
+                />
+                {provider.label}
+              </a>
+            ))}
+          </div>
+        </div>
       </Card>
     </main>
   );

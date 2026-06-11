@@ -1,27 +1,18 @@
 import { create } from "zustand";
-import { users } from "../dummy/users";
-import type { Role, User } from "../types";
+import type { IUser } from "../types/user";
 
 interface AuthState {
-  currentUser: User;
-  login: (email: string) => void;
+  currentUser: IUser | null;
+  setUser: (user: IUser) => void;
   logout: () => void;
-  switchRole: (role: Role) => void;
 }
 
-const defaultUser = users[0];
-
 export const useAuthStore = create<AuthState>((set) => ({
-  currentUser: defaultUser,
-  login: (email) => {
-    const user = users.find((item) => item.email === email) ?? defaultUser;
+  currentUser: null,
+  setUser: (user: IUser) => {
     set({ currentUser: user });
   },
-  logout: () => set({ currentUser: defaultUser }),
-  switchRole: (role) => {
-    const user = users.find((item) => item.role === role) ?? defaultUser;
-    set({ currentUser: user });
-  },
+  logout: () => set({ currentUser: null }),
 }));
 
 export const selectCurrentUser = (state: AuthState) => state.currentUser;

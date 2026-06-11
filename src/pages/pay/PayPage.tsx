@@ -1,28 +1,44 @@
-import { useFormik } from "formik";
 import { ArrowRight } from "lucide-react";
+import { useEffect, useState, type SubmitEvent } from "react";
 import { useNavigate } from "react-router";
 import FormInput from "../../components/forms/FormInput";
 import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
 import PageHeader from "../../components/ui/PageHeader";
-import { usePaymentStore } from "../../stores/payment.store";
+import { useFindPaymentCodeDetails } from "../../feature/payment";
 
 export default function PayPage() {
-  const paymentCodes = usePaymentStore((state) => state.paymentCodes);
   const navigate = useNavigate();
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [paymentCode, setPaymentCode] = useState("");
+  const [paymentError, setPaymentError] = useState("");
 
-  const formik = useFormik<{ code: string }>({
-    initialValues: { code: "CP-581240" },
-    onSubmit: (values) => {
-      const paid = paymentCodes.find(
-        (paymentCode) =>
-          paymentCode.code === values.code && paymentCode.status === "ACTIVE",
-      );
-      if (!paid) return;
-
-      navigate(`/pay/${values.code}`);
+  const { isLoading, error, isSuccess, data } = useFindPaymentCodeDetails(
+    paymentCode,
+    {
+      enabled: isSubmit,
     },
-  });
+  );
+
+  useEffect(() => {
+    if (isSuccess && paymentCode.trim() !== "" && data.data) {
+      navigate("/pay/" + data.data.code);
+    }
+  }, [data?.data, paymentCode, isSuccess, navigate]);
+
+  const handleSubmit = (event: SubmitEvent) => {
+    if (!isLoading) {
+      event.preventDefault();
+      const payment = paymentCode.trim();
+
+      if (payment.length !== 14) {
+        setPaymentError("kode pembayaran tidak ada");
+        return;
+      }
+
+      setIsSubmit(true);
+    }
+  };
 
   return (
     <div className="grid gap-5">
@@ -31,14 +47,20 @@ export default function PayPage() {
         description="Masukkan kode pembayaran aktif."
       />
       <Card className="max-w-xl">
-        <form className="grid gap-4" onSubmit={formik.handleSubmit}>
+        <form className="grid gap-4" onSubmit={(e) => handleSubmit(e)}>
           <FormInput
             label="Payment code"
             name="code"
-            value={formik.values.code}
-            onChange={formik.handleChange}
+            value={paymentCode}
+            onChange={(e) => {
+              setPaymentCode(e.target.value);
+              setPaymentError("");
+              setIsSubmit(false);
+            }}
+            disabled={isLoading}
+            error={error?.response?.data.message || paymentError}
           />
-          <Button type="submit">
+          <Button type="submit" disabled={isLoading}>
             Berikutnya
             <ArrowRight size={18} />
           </Button>

@@ -1,20 +1,13 @@
 import { Banknote, CreditCard, QrCode, Send } from "lucide-react";
 import { Link } from "react-router";
+import Loading from "../../components/general/loading";
 import TransactionList from "../../components/transfer/TransactionList";
 import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
 import PageHeader from "../../components/ui/PageHeader";
 import WalletCard from "../../components/wallet/WalletCard";
-import { selectCurrentUser, useAuthStore } from "../../stores/auth.store";
-import {
-  selectTransactions,
-  useTransactionStore,
-} from "../../stores/transaction.store";
-import {
-  selectActiveWalletId,
-  selectWallets,
-  useWalletStore,
-} from "../../stores/wallet.store";
+import { useGetAllCurrentTransaction } from "../../feature/transaction";
+import { useGetAllWallet } from "../../feature/wallet";
 import { formatCurrency } from "../../utils/format";
 
 const quickActions = [
@@ -25,17 +18,13 @@ const quickActions = [
 ];
 
 export default function DashboardPage() {
-  const currentUser = useAuthStore(selectCurrentUser);
-  const wallets = useWalletStore(selectWallets).filter(
-    (wallet) => wallet.userId === currentUser.id,
-  );
-  const activeWalletId = useWalletStore(selectActiveWalletId);
-  const setActiveWallet = useWalletStore((state) => state.setActiveWallet);
-  const activeWallet =
-    wallets.find((wallet) => wallet.id === activeWalletId) ?? wallets[0];
-  const transactions = useTransactionStore(selectTransactions)
-    .filter((transaction) => transaction.userId === currentUser.id)
-    .slice(0, 5);
+  const { data, isLoading } = useGetAllWallet();
+  const { data: transaction, isLoading: isLoadingTransaction } =
+    useGetAllCurrentTransaction();
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className="space-y-5">
@@ -44,30 +33,17 @@ export default function DashboardPage() {
         description="Ringkasan wallet aktif, saldo, dan transaksi terbaru."
       />
       <div className="grid w-full gap-4 lg:grid-cols-2">
-        <WalletCard wallet={activeWallet} active />
+        <WalletCard wallet={(data?.data ?? []).find((v) => v.is_primary)} />
         <Card>
           <p className="caption text-primary">Total balance</p>
           <p className="text-primary mt-2 text-2xl font-bold">
             {formatCurrency(
-              wallets.reduce((total, wallet) => total + wallet.balance, 0),
+              (data?.data ?? []).reduce(
+                (total, wallet) => total + wallet.balance,
+                0,
+              ),
             )}
           </p>
-          <label className="mt-5 block">
-            <span className="caption text-primary mb-1 block">
-              Active wallet
-            </span>
-            <select
-              className="border-light-gray w-full rounded-md text-sm"
-              value={activeWallet.id}
-              onChange={(event) => setActiveWallet(event.target.value)}
-            >
-              {wallets.map((wallet) => (
-                <option key={wallet.id} value={wallet.id}>
-                  {wallet.name}
-                </option>
-              ))}
-            </select>
-          </label>
         </Card>
       </div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -94,7 +70,11 @@ export default function DashboardPage() {
             View all
           </Link>
         </div>
-        <TransactionList transactions={transactions} />
+        {isLoadingTransaction && <Loading />}
+        {!isLoadingTransaction &&
+          transaction?.pages.map((group, i) => (
+            <TransactionList key={i + "_"} transactions={group.data || []} />
+          ))}
       </Card>
     </div>
   );

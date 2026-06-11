@@ -1,11 +1,9 @@
 import {
-  Activity,
   Banknote,
   ClipboardList,
   CreditCard,
   History,
   Home,
-  Landmark,
   QrCode,
   Send,
   ShieldCheck,
@@ -28,9 +26,7 @@ export const userNavigation = [
 export const adminNavigation = [
   { label: "Admin", href: "/admin", icon: ShieldCheck },
   { label: "Users", href: "/admin/users", icon: Users },
-  { label: "Wallets", href: "/admin/wallets", icon: Landmark },
   { label: "Topups", href: "/admin/topups", icon: ClipboardList },
-  { label: "Transactions", href: "/admin/transactions", icon: Activity },
   { label: "Payment Codes", href: "/admin/payment-codes", icon: QrCode },
   { label: "Profile", href: "/admin/profile", icon: User },
 ];

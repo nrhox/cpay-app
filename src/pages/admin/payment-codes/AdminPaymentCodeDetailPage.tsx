@@ -1,32 +1,37 @@
 import { Link, useParams } from "react-router";
+import Loading from "../../../components/general/loading";
 import PaymentCodeCard from "../../../components/payment/PaymentCodeCard";
 import TransactionReview from "../../../components/transactions/TransactionReview";
 import Button from "../../../components/ui/Button";
 import EmptyState from "../../../components/ui/EmptyState";
 import PageHeader from "../../../components/ui/PageHeader";
-import { users } from "../../../dummy/users";
-import { usePaymentStore } from "../../../stores/payment.store";
-import { selectWallets, useWalletStore } from "../../../stores/wallet.store";
+import {
+  useAdminCancelPaymentCode,
+  useAdminGetPaymentCode,
+} from "../../../feature/admin";
 import { formatCurrency, formatDate } from "../../../utils/format";
 
 export default function AdminPaymentCodeDetailPage() {
   const { id } = useParams();
-  const paymentCode = usePaymentStore((state) =>
-    state.paymentCodes.find((item) => item.id === id),
-  );
-  const closePaymentCode = usePaymentStore((state) => state.closePaymentCode);
-  const wallet = useWalletStore(selectWallets).find(
-    (item) => item.id === paymentCode?.walletId,
-  );
-  const owner = users.find((user) => user.id === paymentCode?.userId);
+  const { data, isLoading, refetch } = useAdminGetPaymentCode(id);
+  const { mutate, isPending, isSuccess } = useAdminCancelPaymentCode(id ?? "", {
+    onSuccess: () => {
+      refetch();
+    },
+  });
 
-  if (!paymentCode) return <EmptyState title="Payment code tidak ditemukan" />;
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (!data?.data && !isLoading)
+    return <EmptyState title="Payment code tidak ditemukan" />;
 
   return (
     <div className="grid gap-5">
       <PageHeader
-        title={paymentCode.merchant}
-        description={paymentCode.code}
+        title={data?.data?.merchant || ""}
+        description={data?.data?.code}
         actions={
           <Link to="/admin/payment-codes">
             <Button type="button" variant="secondary">
@@ -35,29 +40,31 @@ export default function AdminPaymentCodeDetailPage() {
           </Link>
         }
       />
-      <PaymentCodeCard paymentCode={paymentCode} />
+      <PaymentCodeCard paymentCode={data?.data} />
       <TransactionReview
         className="max-w-none"
         items={[
-          { label: "User", value: owner?.name ?? paymentCode.userId },
-          { label: "Wallet", value: wallet?.name ?? paymentCode.walletId },
-          { label: "Amount", value: formatCurrency(paymentCode.amount) },
-          { label: "Status", value: paymentCode.status },
-          { label: "Created", value: formatDate(paymentCode.createdAt) },
-          { label: "Expires", value: formatDate(paymentCode.expiresAt) },
-          { label: "Note", value: paymentCode.note || "-" },
+          { label: "User", value: data?.data?.user_id ?? "-" },
+          { label: "Wallet", value: data?.data?.wallet_id ?? "-" },
+          { label: "Amount", value: formatCurrency(data?.data?.amount ?? 0) },
+          { label: "Status", value: data?.data?.status ?? "-" },
+          { label: "Created", value: formatDate(data?.data?.created_at || "") },
+          { label: "Expires", value: formatDate(data?.data?.expires_at || "") },
+          { label: "Note", value: data?.data?.note || "-" },
         ]}
       />
-      <div className="grid max-w-xl">
-        <Button
-          type="button"
-          variant="danger"
-          disabled={paymentCode.status !== "ACTIVE"}
-          onClick={() => closePaymentCode(paymentCode.id)}
-        >
-          Close Payment Code
-        </Button>
-      </div>
+      {data?.data?.status === "ACTIVE" && (
+        <div className="grid max-w-xl">
+          <Button
+            type="button"
+            variant="danger"
+            disabled={isLoading || isPending || isSuccess}
+            onClick={() => mutate()}
+          >
+            Close Payment Code
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

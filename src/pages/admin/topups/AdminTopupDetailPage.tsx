@@ -1,29 +1,50 @@
 import { Link, useParams } from "react-router";
+import Loading from "../../../components/general/loading";
 import TransactionReview from "../../../components/transactions/TransactionReview";
 import Button from "../../../components/ui/Button";
 import EmptyState from "../../../components/ui/EmptyState";
 import PageHeader from "../../../components/ui/PageHeader";
-import { users } from "../../../dummy/users";
-import { selectTopups, useTopupStore } from "../../../stores/topup.store";
-import { selectWallets, useWalletStore } from "../../../stores/wallet.store";
+import {
+  useAdminApproveTopup,
+  useAdminGetTopup,
+  useAdminRejectTopup,
+} from "../../../feature/admin";
 import { formatCurrency, formatDate } from "../../../utils/format";
-import { ApproveTopupRequest } from "../../../components/admin/ApproveTopupRequest";
 
 export default function AdminTopupDetailPage() {
   const { id } = useParams();
-  const topup = useTopupStore(selectTopups).find((item) => item.id === id);
-  const wallet = useWalletStore(selectWallets).find(
-    (item) => item.id === topup?.walletId,
-  );
-  const owner = users.find((user) => user.id === topup?.userId);
-  const cancelTopup = useTopupStore((state) => state.cancelTopup);
+  const { data, isLoading, refetch } = useAdminGetTopup(id);
+  const {
+    mutate: setApproved,
+    isPending: isPendingApproved,
+    isSuccess: isSuccessApproved,
+  } = useAdminApproveTopup(id ?? "", {
+    onSuccess: () => {
+      refetch();
+    },
+  });
 
-  if (!topup) return <EmptyState title="Top up tidak ditemukan" />;
+  const {
+    mutate: setReject,
+    isPending: isPendingReject,
+    isSuccess: isSuccessReject,
+  } = useAdminRejectTopup(id ?? "", {
+    onSuccess: () => {
+      refetch();
+    },
+  });
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (!data?.data && !isLoading)
+    return <EmptyState title="Top up tidak ditemukan" />;
 
   return (
     <div className="grid gap-5">
       <PageHeader
-        title={topup.reference}
+        title={data?.data?.reference ?? ""}
         description="Detail request top up."
         actions={
           <Link to="/admin/topups">
@@ -36,35 +57,47 @@ export default function AdminTopupDetailPage() {
       <TransactionReview
         className="max-w-none"
         items={[
-          { label: "User", value: owner?.name ?? topup.userId },
-          { label: "Wallet", value: wallet?.name ?? topup.walletId },
-          { label: "Bank", value: topup.bankName },
-          { label: "Amount", value: formatCurrency(topup.amount) },
-          { label: "Status", value: topup.status },
-          { label: "Requested", value: formatDate(topup.requestedAt) },
+          { label: "User", value: data?.data?.user_id || "-" },
+          { label: "Wallet", value: data?.data?.wallet_id || "-" },
+          { label: "Amount", value: formatCurrency(data?.data?.amount ?? 0) },
+          { label: "Status", value: data?.data?.status || "" },
           {
-            label: "Reviewed",
-            value: topup.reviewedAt ? formatDate(topup.reviewedAt) : "-",
+            label: "Requested",
+            value: formatDate(data?.data?.requested_at || ""),
           },
         ]}
       />
-      <div className="flex gap-2">
-        <Button
-          type="button"
-          disabled={topup.status !== "PENDING"}
-          onClick={() => ApproveTopupRequest(topup)}
-        >
-          Approve
-        </Button>
-        <Button
-          type="button"
-          variant="danger"
-          disabled={topup.status !== "PENDING"}
-          onClick={() => cancelTopup(topup.id)}
-        >
-          Cancel
-        </Button>
-      </div>
+      {data?.data?.status === "PENDING" && (
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            disabled={
+              isPendingApproved ||
+              isPendingReject ||
+              isLoading ||
+              isSuccessApproved ||
+              isSuccessReject
+            }
+            onClick={() => setApproved()}
+          >
+            Approve
+          </Button>
+          <Button
+            type="button"
+            variant="danger"
+            disabled={
+              isPendingApproved ||
+              isPendingReject ||
+              isLoading ||
+              isSuccessApproved ||
+              isSuccessReject
+            }
+            onClick={() => setReject()}
+          >
+            Cancel
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

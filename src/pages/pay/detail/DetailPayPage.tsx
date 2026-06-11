@@ -1,21 +1,22 @@
 import { CreditCard } from "lucide-react";
 import { Navigate, useNavigate, useParams } from "react-router";
+import Loading from "../../../components/general/loading";
 import TransactionReview from "../../../components/transactions/TransactionReview";
 import Button from "../../../components/ui/Button";
 import PageHeader from "../../../components/ui/PageHeader";
-import { usePaymentStore } from "../../../stores/payment.store";
+import { useFindPaymentCodeDetails } from "../../../feature/payment";
 import { formatCurrency, formatDate } from "../../../utils/format";
 
 export default function DetailPayPage() {
   const { id } = useParams();
-  const paymentCode = usePaymentStore((state) =>
-    state.paymentCodes.find(
-      (item) => item.code === (id ?? "") && item.status === "ACTIVE",
-    ),
-  );
   const navigate = useNavigate();
+  const { data, isLoading } = useFindPaymentCodeDetails(id);
 
-  if (!paymentCode) {
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (!data?.data && !isLoading) {
     return <Navigate to="/pay" />;
   }
 
@@ -27,17 +28,20 @@ export default function DetailPayPage() {
       />
       <TransactionReview
         items={[
-          { label: "Merchant", value: paymentCode.merchant },
-          { label: "Kode pembayaran", value: paymentCode.code },
-          { label: "Nominal", value: formatCurrency(paymentCode.amount) },
-          { label: "Kadaluarsa", value: formatDate(paymentCode.expiresAt) },
-          { label: "Catatan", value: paymentCode.note || "-" },
+          { label: "Merchant", value: data?.data?.merchant || "-" },
+          { label: "Kode pembayaran", value: data?.data?.code || "-" },
+          { label: "Nominal", value: formatCurrency(data?.data?.amount || 0) },
+          {
+            label: "Kadaluarsa",
+            value: formatDate(data?.data?.expires_at || ""),
+          },
+          { label: "Catatan", value: data?.data?.note || "-" },
         ]}
       />
       <div className="grid max-w-xl">
         <Button
           type="button"
-          onClick={() => navigate(`/pay/${paymentCode.code}/pin`)}
+          onClick={() => navigate(`/pay/${data?.data?.code}/pin`)}
         >
           <CreditCard size={18} />
           Bayar

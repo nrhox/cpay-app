@@ -1,50 +1,60 @@
+import { useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router";
+import AlertError from "../../../components/allert/AlertError";
+import Loading from "../../../components/general/loading";
 import PinInput from "../../../components/transactions/PinInput";
 import TransactionReview from "../../../components/transactions/TransactionReview";
 import Card from "../../../components/ui/Card";
 import PageHeader from "../../../components/ui/PageHeader";
-import { selectCurrentUser, useAuthStore } from "../../../stores/auth.store";
-import { usePaymentStore } from "../../../stores/payment.store";
-import { useTransactionStore } from "../../../stores/transaction.store";
-import { useWalletStore } from "../../../stores/wallet.store";
-import { formatCurrency, makeId } from "../../../utils/format";
+import {
+  useFindPaymentCodeDetails,
+  usePayPaymentCode,
+} from "../../../feature/payment";
+import { useGetAllWallet } from "../../../feature/wallet";
+import { formatCurrency, formatDate } from "../../../utils/format";
 
 export default function PayPinPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const paymentCode = usePaymentStore((state) =>
-    state.paymentCodes.find(
-      (item) => item.code === (id ?? "") && item.status === "ACTIVE",
-    ),
-  );
+  const [errorMessage, setError] = useState("");
 
-  const currentUser = useAuthStore(selectCurrentUser);
-  const payPaymentCode = usePaymentStore((state) => state.payPaymentCode);
-  const adjustBalance = useWalletStore((state) => state.adjustBalance);
-  const addTransaction = useTransactionStore((state) => state.addTransaction);
+  const { data: dataPayCode, isLoading: isLoadingPay } =
+    useFindPaymentCodeDetails(id);
+  const { data: dataWallets, isLoading } = useGetAllWallet();
+  const { mutate } = usePayPaymentCode({
+    onSuccess: (data) => {
+      navigate("/transactions/" + data.data?.reference);
+    },
+    onError: (res) => {
+      const errs = res.response?.data.errors;
+      const errMsg = res.response?.data.message;
 
-  if (!paymentCode) {
+      if (errs) {
+        const err = errs.at(0);
+        if (err) {
+          setError(err?.message || "");
+          return;
+        }
+      }
+      setError(errMsg ?? "");
+      return;
+    },
+  });
+
+  if (isLoadingPay || isLoading) {
+    return <Loading />;
+  }
+
+  if (!dataPayCode?.data && !isLoadingPay) {
     return <Navigate to="/pay" />;
   }
 
-  const completePayment = () => {
-    const paid = payPaymentCode(paymentCode.code);
-    if (!paid) return;
-
-    adjustBalance(paid.walletId, -paid.amount);
-    addTransaction({
-      id: makeId("trx"),
-      walletId: paid.walletId,
-      userId: currentUser.id,
-      type: "PAYMENT",
-      title: "Payment code paid",
-      amount: paid.amount,
-      direction: "OUT",
-      counterparty: paid.merchant,
-      status: "SUCCESS",
-      createdAt: new Date().toISOString(),
+  const completePayment = (pin: string) => {
+    mutate({
+      payment_code: id ?? "",
+      pin: pin,
+      wallet_id: dataWallets?.data?.find((v) => v.is_primary)?._id ?? "",
     });
-    navigate("/dashboard");
   };
 
   return (
@@ -55,13 +65,21 @@ export default function PayPinPage() {
       />
       <TransactionReview
         items={[
-          { label: "Merchant", value: paymentCode.merchant },
-          { label: "Kode pembayaran", value: paymentCode.code },
-          { label: "Nominal", value: formatCurrency(paymentCode.amount) },
-          { label: "Catatan", value: paymentCode.note || "-" },
+          { label: "Merchant", value: dataPayCode?.data?.merchant || "-" },
+          { label: "Kode pembayaran", value: dataPayCode?.data?.code || "-" },
+          {
+            label: "Nominal",
+            value: formatCurrency(dataPayCode?.data?.amount || 0),
+          },
+          {
+            label: "Kadaluarsa",
+            value: formatDate(dataPayCode?.data?.expires_at || ""),
+          },
+          { label: "Catatan", value: dataPayCode?.data?.note || "-" },
         ]}
       />
       <Card className="max-w-xl">
+        {errorMessage !== "" && <AlertError message={errorMessage} />}
         <PinInput onComplete={completePayment} />
       </Card>
     </div>

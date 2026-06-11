@@ -1,7 +1,7 @@
 import clsx from "clsx";
-import type { PaymentCode } from "../../types";
+import type { tPaymentCodeStatus } from "../../types/paymentCode";
 
-export const PaymentTone = (status: PaymentCode["status"]) => {
+export const PaymentTone = (status: tPaymentCodeStatus) => {
   if (status === "ACTIVE") return "success";
   if (status === "PAID") return "neutral";
   if (status === "EXPIRED") return "warning";

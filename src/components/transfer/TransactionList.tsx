@@ -1,28 +1,31 @@
 import { ArrowDownLeft, ArrowUpRight, ChevronRight } from "lucide-react";
 import { Link } from "react-router";
-import type { Transaction } from "../../types";
+import type { ITransaction } from "../../types/transaction";
 import { formatCurrency, formatDate } from "../../utils/format";
+import { getTransactionDirection } from "../../utils/transaction";
 import EmptyState from "../ui/EmptyState";
 
 export default function TransactionList({
   transactions,
+  userId,
 }: {
-  transactions: Transaction[];
+  transactions: ITransaction[];
+  userId?: string;
 }) {
   if (transactions.length === 0)
     return <EmptyState title="Belum ada transaksi" />;
 
   return (
     <div className="space-y-3">
-      {transactions.map((transaction) => (
+      {transactions.map((transaction, i) => (
         <Link
-          key={transaction.id}
-          to={`/transactions/${transaction.id}`}
+          key={i}
+          to={`/transactions/${transaction.reference}`}
           className="block"
         >
           <div className="border-light-gray flex items-center gap-3 rounded-lg border bg-white p-4">
             <div className="bg-primary-50 text-primary-700 grid h-10 w-10 shrink-0 place-items-center rounded-md">
-              {transaction.direction === "IN" ? (
+              {getTransactionDirection(transaction, userId ?? "") === "IN" ? (
                 <ArrowDownLeft size={20} />
               ) : (
                 <ArrowUpRight size={20} />
@@ -30,20 +33,23 @@ export default function TransactionList({
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-primary truncate text-sm font-semibold">
-                {transaction.title}
+                {transaction.reference}
               </p>
               <p className="caption text-primary truncate">
-                {transaction.counterparty} | {formatDate(transaction.createdAt)}
+                {transaction.destination?.wallet_name} |{" "}
+                {formatDate(transaction.created_at ?? new Date().toISOString())}
               </p>
             </div>
             <p
               className={
-                transaction.direction === "IN"
+                getTransactionDirection(transaction, userId ?? "") === "IN"
                   ? "text-success text-sm font-bold"
                   : "text-primary text-sm font-bold"
               }
             >
-              {transaction.direction === "IN" ? "+" : "-"}
+              {getTransactionDirection(transaction, userId ?? "") === "IN"
+                ? "+"
+                : "-"}
               {formatCurrency(transaction.amount)}
             </p>
             <ChevronRight className="text-primary shrink-0" size={18} />

@@ -1,37 +1,61 @@
-import { Link } from "react-router";
+import { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
+import { Link, useSearchParams } from "react-router";
 import AdminListView, {
   type SortOption,
 } from "../../../components/admin/AdminListView";
 import { StatusTone } from "../../../components/admin/tone";
+import Loading from "../../../components/general/loading";
 import Badge from "../../../components/ui/Badge";
-import Button from "../../../components/ui/Button";
 import PageHeader from "../../../components/ui/PageHeader";
-import { usePaymentStore } from "../../../stores/payment.store";
-import type { PaymentCode } from "../../../types";
+import { useAdminListAllPaymentCodes } from "../../../feature/admin";
 import { formatCurrency, formatDate } from "../../../utils/format";
-import { NewestFirst, TextCompare } from "../../../utils/sort";
+import type { IPaymentCode } from "../../../types/paymentCode";
 
-const paymentCodeSortOptions: SortOption<PaymentCode>[] = [
+const paymentCodeSortOptions: SortOption<IPaymentCode>[] = [
   {
     label: "Dibuat terbaru",
-    value: "created-desc",
-    compare: (first, second) => NewestFirst(first.createdAt, second.createdAt),
+    sortBy: "created_at",
+    sort: "desc",
   },
   {
     label: "Nominal terbesar",
-    value: "amount-desc",
-    compare: (first, second) => second.amount - first.amount,
+    sort: "desc",
+    sortBy: "amount",
   },
   {
     label: "Status",
-    value: "status-asc",
-    compare: (first, second) => TextCompare(first.status, second.status),
+    sortBy: "status",
+    sort: "desc",
   },
 ];
 
 export default function AdminPaymentCodesPage() {
-  const paymentCodes = usePaymentStore((state) => state.paymentCodes);
-  const closePaymentCode = usePaymentStore((state) => state.closePaymentCode);
+  const { ref, inView } = useInView();
+  const [searchParams] = useSearchParams();
+
+  const q = searchParams.get("q") || "";
+  const sort_by = searchParams.get("sort_by") || "";
+  const sort = searchParams.get("sort") || "";
+
+  const {
+    data,
+    isLoading,
+    fetchNextPage,
+    isFetchingNextPage,
+    isFetching,
+    hasNextPage,
+  } = useAdminListAllPaymentCodes({
+    q,
+    sort,
+    sort_by,
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [fetchNextPage, hasNextPage, inView, isFetchingNextPage]);
 
   return (
     <div className="grid gap-5">
@@ -40,26 +64,24 @@ export default function AdminPaymentCodesPage() {
         description="Pantau dan tutup payment code aktif."
       />
       <AdminListView
-        items={paymentCodes}
-        searchPlaceholder="Cari merchant, kode, status, atau user"
-        searchText={(paymentCode) =>
-          `${paymentCode.merchant} ${paymentCode.code} ${paymentCode.status} ${paymentCode.userId} ${paymentCode.walletId}`
-        }
+        items={data?.pages?.flatMap((v) => v.data ?? []) || []}
+        searchPlaceholder="Cari merchant, kode atau status"
         sortOptions={paymentCodeSortOptions}
         renderItem={(paymentCode) => (
           <div
-            key={paymentCode.id}
+            key={paymentCode._id}
             className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between"
           >
             <Link
-              to={`/admin/payment-codes/${paymentCode.id}`}
+              to={`/admin/payment-codes/${paymentCode._id}`}
               className="min-w-0 flex-1"
             >
               <p className="text-primary text-sm font-semibold">
                 {paymentCode.merchant}
               </p>
               <p className="caption text-primary">
-                {paymentCode.code} | Expires {formatDate(paymentCode.expiresAt)}
+                {paymentCode.code} | Expires{" "}
+                {formatDate(paymentCode.expires_at)}
               </p>
             </Link>
             <div className="flex flex-wrap items-center gap-2">
@@ -70,18 +92,15 @@ export default function AdminPaymentCodesPage() {
                 label={paymentCode.status}
                 tone={StatusTone(paymentCode.status)}
               />
-              <Button
-                type="button"
-                variant="danger"
-                disabled={paymentCode.status !== "ACTIVE"}
-                onClick={() => closePaymentCode(paymentCode.id)}
-              >
-                Close
-              </Button>
             </div>
           </div>
         )}
       />
+
+      {(hasNextPage || isFetching) && (
+        <div ref={ref} className="h-5 w-full"></div>
+      )}
+      {(isFetchingNextPage || isLoading) && <Loading />}
     </div>
   );
 }

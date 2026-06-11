@@ -1,17 +1,17 @@
-import { Link, Navigate, useParams } from "react-router";
+import { Link, useParams } from "react-router";
+import Loading from "../../components/general/loading";
 import TransactionDetailCard from "../../components/transactions/TransactionDetailCard";
 import Button from "../../components/ui/Button";
+import EmptyState from "../../components/ui/EmptyState";
 import PageHeader from "../../components/ui/PageHeader";
-import { useTransactionStore } from "../../stores/transaction.store";
+import { useGetOneTransaction } from "../../feature/transaction";
 
 export default function TransferDetailPage() {
   const { id } = useParams();
-  const transaction = useTransactionStore((state) =>
-    state.transactions.find((v) => v.id === id),
-  );
+  const { data, isLoading } = useGetOneTransaction(id);
 
-  if (!transaction) {
-    return <Navigate replace to="/transactions" />;
+  if (isLoading) {
+    return <Loading />;
   }
 
   return (
@@ -27,7 +27,11 @@ export default function TransferDetailPage() {
           </Link>
         }
       />
-      <TransactionDetailCard transaction={transaction} />
+      {data?.data && !isLoading ? (
+        <TransactionDetailCard transaction={data.data} />
+      ) : (
+        <EmptyState title="Belum ada transaksi" />
+      )}
     </div>
   );
 }

@@ -1,97 +1,94 @@
 import { useFormik } from "formik";
 import { QrCode } from "lucide-react";
+import { useNavigate } from "react-router";
 import * as yup from "yup";
 import FormInput from "../../../components/forms/FormInput";
 import FormSelect from "../../../components/forms/FormSelect";
 import Button from "../../../components/ui/Button";
 import Card from "../../../components/ui/Card";
 import PageHeader from "../../../components/ui/PageHeader";
-import { selectCurrentUser, useAuthStore } from "../../../stores/auth.store";
-import { usePaymentStore } from "../../../stores/payment.store";
-import {
-  selectActiveWalletId,
-  selectWallets,
-  useWalletStore,
-} from "../../../stores/wallet.store";
-import type { CreatePaymentCodeForm } from "../../../types";
+import { useCreatePaymentCode } from "../../../feature/payment";
+import { useGetAllWallet } from "../../../feature/wallet";
+import type { ICreatePaymentCodeRequest } from "../../../types/request";
 
 const createPaymentCodeSchema = yup.object({
-  walletId: yup.string().required("Wallet wajib dipilih"),
-  merchant: yup.string().required("Merchant wajib diisi"),
+  wallet_id: yup.string().required("Wallet wajib dipilih"),
   amount: yup
     .number()
-    .min(10000, "Minimal Rp10.000")
+    .min(1000, "Minimal Rp1.000")
     .required("Nominal wajib diisi"),
   note: yup.string().max(80, "Maksimal 80 karakter"),
 });
 
 export default function PaymentCodeCreatePage() {
-  const currentUser = useAuthStore(selectCurrentUser);
-  const activeWalletId = useWalletStore(selectActiveWalletId);
-  const wallets = useWalletStore(selectWallets).filter(
-    (wallet) => wallet.userId === currentUser.id,
-  );
-  const createPaymentCode = usePaymentStore((state) => state.createPaymentCode);
-  const formik = useFormik<CreatePaymentCodeForm>({
-    initialValues: {
-      walletId: activeWalletId,
-      merchant: "",
-      amount: 10000,
-      note: "",
-    },
-    validationSchema: createPaymentCodeSchema,
-    onSubmit: (values, helpers) => {
-      createPaymentCode(currentUser.id, values);
-      helpers.resetForm({
-        values: { ...values, merchant: "", amount: 10000, note: "" },
+  const navigate = useNavigate();
+
+  const { data, isLoading } = useGetAllWallet();
+
+  const { mutate, isPending, isSuccess } = useCreatePaymentCode({
+    onError: (err) => {
+      (err.response?.data?.errors || []).forEach((error) => {
+        setFieldError(error.field, error.message);
       });
     },
+    onSuccess: (data) => {
+      navigate("/payment-codes/" + data.data?.code);
+    },
   });
+
+  const { errors, touched, handleChange, handleSubmit, setFieldError, values } =
+    useFormik<ICreatePaymentCodeRequest>({
+      initialValues: {
+        wallet_id: "",
+        amount: 10000,
+        note: "",
+      },
+      validationSchema: createPaymentCodeSchema,
+      onSubmit: (values) => {
+        mutate(values);
+      },
+    });
 
   return (
     <div className="grid gap-5">
       <PageHeader
         title="Create Payment Code"
-        description="Buat kode untuk dibayar merchant."
+        description="Buat kode untuk dibayar note."
       />
       <Card className="max-w-2xl">
-        <form className="grid gap-4" onSubmit={formik.handleSubmit}>
+        <form className="grid gap-4" onSubmit={handleSubmit}>
           <FormSelect
+            disabled={isLoading || isPending || isSuccess}
             label="Wallet"
-            name="walletId"
-            value={formik.values.walletId}
-            onChange={formik.handleChange}
-            options={wallets.map((wallet) => ({
+            name="wallet_id"
+            value={values.wallet_id}
+            onChange={handleChange}
+            options={(data?.data || []).map((wallet) => ({
               label: wallet.name,
-              value: wallet.id,
+              value: wallet._id,
             }))}
-            error={formik.touched.walletId ? formik.errors.walletId : undefined}
-          />
-          <FormInput
-            label="Merchant"
-            name="merchant"
-            value={formik.values.merchant}
-            onChange={formik.handleChange}
-            error={formik.touched.merchant ? formik.errors.merchant : undefined}
+            error={touched.wallet_id ? errors.wallet_id : undefined}
           />
           <FormInput
             label="Amount"
             name="amount"
+            disabled={isLoading || isPending || isSuccess}
             type="number"
-            value={formik.values.amount}
-            onChange={formik.handleChange}
-            error={formik.touched.amount ? formik.errors.amount : undefined}
+            value={values.amount}
+            onChange={handleChange}
+            error={touched.amount ? errors.amount : undefined}
           />
           <FormInput
             label="Note"
             name="note"
-            value={formik.values.note}
-            onChange={formik.handleChange}
-            error={formik.touched.note ? formik.errors.note : undefined}
+            value={values.note}
+            disabled={isLoading || isPending || isSuccess}
+            onChange={handleChange}
+            error={touched.note ? errors.note : undefined}
           />
-          <Button type="submit">
+          <Button type="submit" disabled={isLoading || isPending || isSuccess}>
             <QrCode size={18} />
-            Create Code
+            Buat kode
           </Button>
         </form>
       </Card>

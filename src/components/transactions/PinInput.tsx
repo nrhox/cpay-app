@@ -12,6 +12,8 @@ import Input from "../forms/Input";
 interface PinInputProps {
   label?: string;
   helper?: string;
+  disabled?: boolean;
+  onChange?: (pin: string) => void;
   onComplete: (pin: string) => void;
 }
 
@@ -37,6 +39,8 @@ export default function PinInput({
   label = "PIN",
   helper = "Masukan pin anda.",
   onComplete,
+  onChange,
+  disabled,
 }: PinInputProps) {
   const inputRefs = useRef<HTMLInputElement[]>([]);
 
@@ -67,6 +71,10 @@ export default function PinInput({
 
       if (val !== "" && index < PIN_LENGTH - 1) {
         inputRefs.current[index + 1]?.focus();
+      }
+
+      if (onChange) {
+        onChange(newPin.join(""));
       }
     }
   };
@@ -114,10 +122,11 @@ export default function PinInput({
 
               return (
                 <Input
+                  disabled={disabled}
                   key={index}
                   autoFocus={index === 0}
                   className={clsx(
-                    "w-full rounded-md text-center text-lg font-semibold tracking-[0.4em]",
+                    "w-full rounded-md text-center text-sm font-semibold tracking-[0.4em]",
                     hasError
                       ? "border-danger focus:border-danger focus:ring-danger"
                       : "border-light-gray focus:border-primary-500 focus:ring-primary-500",

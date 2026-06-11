@@ -1,31 +1,47 @@
+import { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
 import { Link, useParams } from "react-router";
+import Loading from "../../../components/general/loading";
 import TransactionList from "../../../components/transfer/TransactionList";
 import Button from "../../../components/ui/Button";
 import Card from "../../../components/ui/Card";
 import EmptyState from "../../../components/ui/EmptyState";
 import PageHeader from "../../../components/ui/PageHeader";
 import WalletCard from "../../../components/wallet/WalletCard";
-import {
-  selectTransactions,
-  useTransactionStore,
-} from "../../../stores/transaction.store";
-import { selectWallets, useWalletStore } from "../../../stores/wallet.store";
-import { formatDate } from "../../../utils/format";
+import { useGetWalletTransactions } from "../../../feature/transaction";
+import { useGetOneWallet } from "../../../feature/wallet";
+import { useAuthStore } from "../../../stores/auth.store";
+import { formatAccount, formatDate } from "../../../utils/format";
 
 export default function WalletDetailPage() {
   const { id } = useParams();
-  const wallet = useWalletStore(selectWallets).find((item) => item.id === id);
-  const transactions = useTransactionStore(selectTransactions).filter(
-    (transaction) => transaction.walletId === id,
-  );
+  const { ref, inView } = useInView();
+  const userId = useAuthStore((state) => state.currentUser?._id);
 
-  if (!wallet) return <EmptyState title="Wallet tidak ditemukan" />;
+  const { data: dataWallet, isLoading: isLoadingWallet } = useGetOneWallet(id);
+  const {
+    data: dataTransaction,
+    isLoading: isLoadingTransaction,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+    isFetching,
+  } = useGetWalletTransactions(id ?? "");
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [fetchNextPage, hasNextPage, inView, isFetchingNextPage]);
+
+  if (!dataWallet?.data) return <EmptyState title="Wallet tidak ditemukan" />;
+  if (isLoadingWallet) return <Loading />;
 
   return (
     <div className="grid gap-5">
       <PageHeader
-        title={wallet.name}
-        description={wallet.accountNumber}
+        title={dataWallet.data.name}
+        description={formatAccount(dataWallet.data.account_number)}
         actions={
           <Link to="/wallets">
             <Button type="button" variant="secondary">
@@ -34,19 +50,30 @@ export default function WalletDetailPage() {
           </Link>
         }
       />
-      <WalletCard wallet={wallet} />
+      <WalletCard wallet={dataWallet.data} />
       <Card>
         <h2 className="subheading">Wallet Detail</h2>
         <div className="text-primary mt-3 grid gap-2 text-sm sm:grid-cols-2">
-          <p>Status: {wallet.status}</p>
-          <p>Created: {formatDate(wallet.createdAt)}</p>
-          <p>Currency: {wallet.currency}</p>
-          <p>Primary: {wallet.isPrimary ? "Yes" : "No"}</p>
+          <p>Status: {dataWallet.data.status}</p>
+          <p>Created: {formatDate(dataWallet.data.created_at)}</p>
+          <p>Currency: IDR</p>
+          <p>Primary: {dataWallet.data.is_primary ? "Yes" : "No"}</p>
         </div>
       </Card>
       <Card>
         <h2 className="subheading mb-3">Transactions</h2>
-        <TransactionList transactions={transactions} />
+        {!isLoadingTransaction &&
+          dataTransaction?.pages.map((group, i) => (
+            <TransactionList
+              key={i}
+              userId={userId}
+              transactions={group.data ?? []}
+            />
+          ))}
+        {(hasNextPage || isFetching) && (
+          <div ref={ref} className="h-5 w-full"></div>
+        )}
+        {isFetchingNextPage && <Loading />}
       </Card>
     </div>
   );
