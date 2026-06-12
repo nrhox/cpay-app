@@ -1,0 +1,7 @@
+services:
+  frontend-cpay:
+    build: .
+    ports:
+      - "8042:4137"
+    env_file:
+      - .env
