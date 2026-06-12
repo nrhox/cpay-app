@@ -13,6 +13,7 @@ export default function TransactionDetailCard({
   return (
     <Card>
       <div className="text-primary grid gap-3 text-sm sm:grid-cols-2">
+        <p>Referensi: {transaction?.reference || "-"}</p>
         <p>Jenis: {transaction?.type}</p>
         <p>Status: {transaction?.status}</p>
         <p>
@@ -30,12 +31,22 @@ export default function TransactionDetailCard({
             {formatCurrency(transaction.amount)}
           </span>
         </p>
-        <p>Arah: {getTransactionDirection(transaction, userId || "")}</p>
-        <p>Tujuan: {transaction.destination?.username}</p>
-        <p>Tanggal: {formatDate(transaction.created_at)}</p>
-        <p className="sm:col-span-2">
-          Judul: {transaction.destination?.username}
+        <p>
+          Arah:{" "}
+          {getTransactionDirection(transaction, userId || "") === "IN"
+            ? "Masuk"
+            : "Keluar"}
         </p>
+        <p>
+          Tujuan: {transaction.destination?.username || "-"} |{" "}
+          {transaction.destination?.wallet_name || "-"}
+        </p>
+        <p>
+          Dari: {transaction.source?.username || "-"} |{" "}
+          {transaction.source?.wallet_name || "-"}
+        </p>
+        <p>Catatan: {transaction.note ?? "-"}</p>
+        <p>Tanggal: {formatDate(transaction.created_at)}</p>
       </div>
     </Card>
   );

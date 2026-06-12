@@ -35,7 +35,7 @@ export default function DashboardPage() {
       <div className="grid w-full gap-4 lg:grid-cols-2">
         <WalletCard wallet={(data?.data ?? []).find((v) => v.is_primary)} />
         <Card>
-          <p className="caption text-primary">Total balance</p>
+          <p className="caption text-primary">Total Tabungan</p>
           <p className="text-primary mt-2 text-2xl font-bold">
             {formatCurrency(
               (data?.data ?? []).reduce(
@@ -62,12 +62,12 @@ export default function DashboardPage() {
       </div>
       <Card>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="subheading">Recent Transactions</h2>
+          <h2 className="subheading">Transaksi terbaru</h2>
           <Link
             className="text-primary-700 text-sm font-semibold"
             to="/transactions"
           >
-            View all
+            Lihat semua
           </Link>
         </div>
         {isLoadingTransaction && <Loading />}

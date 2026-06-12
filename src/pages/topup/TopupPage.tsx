@@ -59,12 +59,12 @@ export default function TopupPage() {
   return (
     <div className="grid gap-5">
       <PageHeader
-        title="Top Up Request"
+        title="Top Up"
         description="Ajukan top up untuk direview admin."
         actions={
           <Link to="/topup/history">
             <Button type="button" variant="secondary">
-              History
+              Riwayat
             </Button>
           </Link>
         }
@@ -84,7 +84,7 @@ export default function TopupPage() {
             error={touched.wallet_number ? errors.wallet_number : undefined}
           />
           <FormInput
-            label="Amount"
+            label="Jumlah"
             disabled={isPending}
             name="amount"
             type="number"

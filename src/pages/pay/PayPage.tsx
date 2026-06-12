@@ -43,13 +43,13 @@ export default function PayPage() {
   return (
     <div className="grid gap-5">
       <PageHeader
-        title="Pay Using Code"
+        title="Bayar menggunakan kode"
         description="Masukkan kode pembayaran aktif."
       />
       <Card className="max-w-xl">
         <form className="grid gap-4" onSubmit={(e) => handleSubmit(e)}>
           <FormInput
-            label="Payment code"
+            label="Kode pembayaran"
             name="code"
             value={paymentCode}
             onChange={(e) => {

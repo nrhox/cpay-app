@@ -27,7 +27,7 @@ export default function TransactionHistoryPage() {
   return (
     <div className="grid gap-5">
       <PageHeader
-        title="Transaction History"
+        title="Riwayat transaksi"
         description="Riwayat transaksi wallet Anda."
       />
       {!isLoading &&

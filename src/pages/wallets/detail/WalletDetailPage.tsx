@@ -45,23 +45,23 @@ export default function WalletDetailPage() {
         actions={
           <Link to="/wallets">
             <Button type="button" variant="secondary">
-              Back
+              Kembali
             </Button>
           </Link>
         }
       />
       <WalletCard wallet={dataWallet.data} />
       <Card>
-        <h2 className="subheading">Wallet Detail</h2>
+        <h2 className="subheading">Rincian rekening</h2>
         <div className="text-primary mt-3 grid gap-2 text-sm sm:grid-cols-2">
           <p>Status: {dataWallet.data.status}</p>
-          <p>Created: {formatDate(dataWallet.data.created_at)}</p>
-          <p>Currency: IDR</p>
-          <p>Primary: {dataWallet.data.is_primary ? "Yes" : "No"}</p>
+          <p>Dibuat pada: {formatDate(dataWallet.data.created_at)}</p>
+          <p>Mata Uang: IDR</p>
+          <p>Jenis: {dataWallet.data.is_primary ? "Utama" : "Alternatif"}</p>
         </div>
       </Card>
       <Card>
-        <h2 className="subheading mb-3">Transactions</h2>
+        <h2 className="subheading mb-3">Transaksi</h2>
         {!isLoadingTransaction &&
           dataTransaction?.pages.map((group, i) => (
             <TransactionList

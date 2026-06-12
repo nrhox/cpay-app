@@ -18,7 +18,7 @@ export default function WalletCard({
           <WalletIcon size={22} />
         </div>
         <Badge
-          label={wallet?.status === "ACTIVE" ? "Active" : "Suspend"}
+          label={wallet?.status === "ACTIVE" ? "Aktif" : "Dibekukan"}
           tone={wallet?.status === "ACTIVE" ? "success" : "danger"}
         />
       </div>

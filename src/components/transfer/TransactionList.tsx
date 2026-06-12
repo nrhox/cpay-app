@@ -36,7 +36,17 @@ export default function TransactionList({
                 {transaction.reference}
               </p>
               <p className="caption text-primary truncate">
-                {transaction.destination?.wallet_name} |{" "}
+                {transaction.type !== "TOPUP" &&
+                getTransactionDirection(transaction, userId ?? "") === "IN"
+                  ? "Dari " +
+                    (transaction.source?.username ?? "") +
+                    " | " +
+                    (transaction.destination?.wallet_name ?? "")
+                  : "Ke " +
+                    (transaction.destination?.username ?? "Admin") +
+                    " | " +
+                    (transaction.destination?.wallet_name ?? "Admin")}{" "}
+                |{" "}
                 {formatDate(transaction.created_at ?? new Date().toISOString())}
               </p>
             </div>

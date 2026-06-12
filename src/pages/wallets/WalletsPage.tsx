@@ -17,7 +17,7 @@ export default function WalletsPage() {
   return (
     <div className="grid gap-5">
       <PageHeader
-        title="Wallets"
+        title="Dompet"
         description="Kelola wallet dan pilih wallet aktif untuk transaksi."
         actions={
           <Link to="/wallets/create">

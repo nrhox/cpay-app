@@ -51,7 +51,7 @@ export default function TransferPage() {
       <Card className="max-w-xl">
         <form className="grid gap-4" onSubmit={handleSubmit}>
           <FormInput
-            label="Destination account"
+            label="Rekening Tujuan"
             name="destinationAccount"
             inputMode="numeric"
             disabled={isLoading}

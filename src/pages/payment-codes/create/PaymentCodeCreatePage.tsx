@@ -70,7 +70,7 @@ export default function PaymentCodeCreatePage() {
             error={touched.wallet_id ? errors.wallet_id : undefined}
           />
           <FormInput
-            label="Amount"
+            label="Nominal"
             name="amount"
             disabled={isLoading || isPending || isSuccess}
             type="number"
@@ -79,7 +79,7 @@ export default function PaymentCodeCreatePage() {
             error={touched.amount ? errors.amount : undefined}
           />
           <FormInput
-            label="Note"
+            label="Catatan"
             name="note"
             value={values.note}
             disabled={isLoading || isPending || isSuccess}

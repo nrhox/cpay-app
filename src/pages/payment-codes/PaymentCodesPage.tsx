@@ -29,7 +29,7 @@ export default function PaymentCodesPage() {
   return (
     <div className="grid gap-5">
       <PageHeader
-        title="Payment Codes"
+        title="Kode Pembayaran"
         description="Kode pembayaran yang dibuat untuk merchant."
         actions={
           <Link to="/payment-codes/create">

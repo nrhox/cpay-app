@@ -56,7 +56,7 @@ export default function CreateWalletPage() {
   return (
     <div className="grid gap-5">
       <PageHeader
-        title="Buat wallet baru"
+        title="Buat rekening baru"
         description="Buat dombet sesuai kebutuhanmu."
       />
       <Card className="max-w-2xl">

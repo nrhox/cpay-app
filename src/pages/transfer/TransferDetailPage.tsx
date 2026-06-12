@@ -17,7 +17,7 @@ export default function TransferDetailPage() {
   return (
     <div className="grid gap-5">
       <PageHeader
-        title="Transaction Detail"
+        title="Detail Transaksi"
         description="Rincian transaksi anda."
         actions={
           <Link to="/transactions">

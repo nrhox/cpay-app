@@ -44,7 +44,7 @@ export default function ProfilePage() {
       <div className="max-w-52">
         <Button variant="danger" className="w-full" onClick={() => logout()}>
           <ArrowLeftFromLineIcon size={20} />
-          Logout
+          Keluar
         </Button>
       </div>
     </div>

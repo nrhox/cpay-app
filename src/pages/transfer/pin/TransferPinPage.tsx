@@ -5,10 +5,10 @@ import TransactionReview from "../../../components/transactions/TransactionRevie
 import Card from "../../../components/ui/Card";
 import PageHeader from "../../../components/ui/PageHeader";
 import { useTransferBalance } from "../../../feature/transaction";
-import type { iError } from "../../../types/response";
-import { formatAccount, formatCurrency } from "../../../utils/format";
 import type { ITransferBalanceRequest } from "../../../types/request";
+import type { iError } from "../../../types/response";
 import type { IWalletWithUser } from "../../../types/wallet";
+import { formatAccount, formatCurrency } from "../../../utils/format";
 
 interface TransferPinState {
   data: ITransferBalanceRequest;
@@ -88,7 +88,7 @@ export default function TransferPinPage() {
         items={[
           { label: "Tujuan", value: transfer.wallet?.user?.full_name || "" },
           {
-            label: "Wallet",
+            label: "Rekening Tujuan",
             value: formatAccount(transfer.wallet?.account_number ?? "") ?? "-",
           },
           {

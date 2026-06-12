@@ -27,7 +27,7 @@ export default function PaymentCodeDetailPage() {
         actions={
           <Link to="/payment-codes">
             <Button type="button" variant="secondary">
-              Back
+              Kembali
             </Button>
           </Link>
         }
@@ -36,11 +36,14 @@ export default function PaymentCodeDetailPage() {
       <TransactionReview
         className="max-w-none"
         items={[
-          { label: "Amount", value: formatCurrency(data?.data?.amount || 0) },
+          { label: "Jumlah", value: formatCurrency(data?.data?.amount || 0) },
           { label: "Status", value: data?.data?.status || "" },
-          { label: "Created", value: formatDate(data?.data?.created_at || "") },
-          { label: "Expires", value: formatDate(data?.data?.expires_at || "") },
-          { label: "Note", value: data?.data?.note || "-" },
+          { label: "Dibuat", value: formatDate(data?.data?.created_at || "") },
+          {
+            label: "Kadaluarsa",
+            value: formatDate(data?.data?.expires_at || ""),
+          },
+          { label: "Catatan", value: data?.data?.note || "-" },
         ]}
       />
     </div>

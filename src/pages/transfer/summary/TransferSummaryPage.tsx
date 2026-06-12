@@ -82,7 +82,7 @@ export default function TransferSummaryPage() {
         {state.error && <AlertError message={state.error} />}
         <form className="grid gap-4" onSubmit={handleSubmit}>
           <FormSelect
-            label="From wallet"
+            label="Dari Rekening"
             name="wallet_id"
             value={values.wallet_id}
             onChange={handleChange}
@@ -93,7 +93,7 @@ export default function TransferSummaryPage() {
             error={touched.wallet_id ? errors.wallet_id : undefined}
           />
           <FormInput
-            label="Amount"
+            label="Nominal"
             name="amount"
             type="number"
             value={values.amount}
@@ -101,7 +101,7 @@ export default function TransferSummaryPage() {
             error={touched.amount ? errors.amount : undefined}
           />
           <FormInput
-            label="Note"
+            label="Catatan"
             name="note"
             value={values.note}
             onChange={handleChange}
