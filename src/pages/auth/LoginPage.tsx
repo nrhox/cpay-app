@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import BRAND from "../../assets/CPay_Logo.svg";
 import GITHUB_LOGO from "../../assets/GitHub_Logo.svg";
 import GOOGLE_LOGO from "../../assets/Goggle_Logo.svg";
@@ -38,7 +38,13 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <img src={BRAND} className="h-14" alt="cpay" />
         <p className="paragraph text-primary mt-1 mb-2">
-          Masuk ke digital wallet dan banking workspace Anda.
+          Masuk ke digital wallet dan banking workspace Anda.{" "}
+          <Link
+            to="/legal"
+            className="text-primary-600 hover:text-primary-700 text-sm font-semibold"
+          >
+            Lihat Kebijakan & Ketentuan
+          </Link>
         </p>
         {errMsg && errMsg !== "" && (
           <AlertError message={ParseErrorKey(errMsg)} />

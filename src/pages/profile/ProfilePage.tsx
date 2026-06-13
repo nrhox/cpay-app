@@ -1,4 +1,5 @@
-import { ArrowLeftFromLineIcon } from "lucide-react";
+import { Link } from "react-router";
+import { ArrowLeftFromLineIcon, Scale } from "lucide-react";
 import Badge from "../../components/ui/Badge";
 import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
@@ -39,6 +40,21 @@ export default function ProfilePage() {
               {i + 1}. {prov.provider}
             </p>
           ))}
+        </div>
+
+        <div className="text-primary mt-5 flex flex-col gap-2 border-t border-gray-200/50 pt-4">
+          <h3 className="subheading">Kebijakan & Ketentuan</h3>
+          <p className="paragraph text-gray-500">
+            Baca dokumen resmi Kebijakan Privasi dan Ketentuan Layanan CPay
+            Bank.
+          </p>
+          <Link
+            to="/legal"
+            className="text-primary-600 hover:text-primary-700 mt-1 flex items-center gap-2 text-sm font-semibold"
+          >
+            <Scale size={16} />
+            Lihat Kebijakan & Ketentuan
+          </Link>
         </div>
       </Card>
       <div className="max-w-52">
