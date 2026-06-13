@@ -10,6 +10,7 @@ import {
   User,
   Users,
   Wallet,
+  Scale,
 } from "lucide-react";
 
 export const userNavigation = [
@@ -17,10 +18,11 @@ export const userNavigation = [
   { label: "Wallets", href: "/wallets", icon: Wallet },
   { label: "Top Up", href: "/topup", icon: Banknote },
   { label: "Transfer", href: "/transfer", icon: Send },
-  { label: "Payment Codes", href: "/payment-codes", icon: QrCode },
-  { label: "Pay", href: "/pay", icon: CreditCard },
-  { label: "Transactions", href: "/transactions", icon: History },
+  { label: "Kode Pembayaran", href: "/payment-codes", icon: QrCode },
+  { label: "Bayar", href: "/pay", icon: CreditCard },
+  { label: "Transaksi", href: "/transactions", icon: History },
   { label: "Profile", href: "/profile", icon: User },
+  { label: "Kebijakan & Ketentuan", href: "/legal", icon: Scale },
 ];
 
 export const adminNavigation = [

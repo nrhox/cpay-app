@@ -54,6 +54,8 @@ const WalletDetailPage = lazy(
   () => import("../pages/wallets/detail/WalletDetailPage"),
 );
 
+const LegalPage = lazy(() => import("../pages/legal/LegalPage"));
+
 // Admin Pages
 const AdminDashboardPage = lazy(
   () => import("../pages/admin/AdminDashboardPage"),
@@ -83,6 +85,8 @@ export default function AppRouter() {
       <Routes>
         <Route path="/auth/login" element={<LoginPage />} />
         <Route path="/auth/login/incomplate" element={<IncomplatePage />} />
+        <Route path="/legal" element={<LegalPage />} />
+
         <Route element={<AppLayout />}>
           <Route path="/" element={<Navigate to="/dashboard" />} />
           <Route path="/dashboard" element={<DashboardPage />} />

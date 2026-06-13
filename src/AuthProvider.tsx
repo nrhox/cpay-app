@@ -5,7 +5,7 @@ import BRAND_LOGO from "./assets/CPay_Logo.svg";
 import { useAuthStore } from "./stores/auth.store";
 import type { ErrorResponseDefault, SuccessResponse } from "./types/response";
 import type { IUser } from "./types/user";
-import axiosInstance from "./utils/axios";
+import axiosInstance, { type ConfigAxiosRequest } from "./utils/axios";
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const setUser = useAuthStore((state) => state.setUser);
@@ -16,7 +16,10 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   >({
     queryKey: ["get_user"],
     queryFn: async () => {
-      const res = await axiosInstance.get<SuccessResponse<IUser>>("/api/v1/me");
+      const res = await axiosInstance.get<SuccessResponse<IUser>>(
+        "/api/v1/me",
+        { _retry: false } as ConfigAxiosRequest,
+      );
       return res.data;
     },
     retry: (failureCount, error) => {
@@ -33,7 +36,10 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       !isLoading &&
       ((error?.response?.status ?? 0) === 401 || error?.code === "ERR_NETWORK")
     ) {
-      if (!currentPath.startsWith("/auth/login")) {
+      if (
+        !currentPath.startsWith("/auth/login") &&
+        !currentPath.startsWith("/legal")
+      ) {
         location.replace("/auth/login");
       }
     }
@@ -55,7 +61,11 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
   const isAuthPage = window.location.pathname.startsWith("/auth/login");
 
-  if (isLoading && !isAuthPage) {
+  if (
+    isLoading &&
+    !isAuthPage &&
+    !window.location.pathname.startsWith("/legal")
+  ) {
     return (
       <div className="flex h-[80vh] w-full items-center justify-center">
         <img src={BRAND_LOGO} alt="logo" className="h-20 md:h-24" />
