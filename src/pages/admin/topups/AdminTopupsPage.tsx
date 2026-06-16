@@ -5,12 +5,11 @@ import AdminListView, {
   type SortOption,
 } from "../../../components/admin/AdminListView";
 import { TopupTone } from "../../../components/admin/tone";
-import Loading from "../../../components/general/loading";
 import Badge from "../../../components/ui/Badge";
 import PageHeader from "../../../components/ui/PageHeader";
 import { useAdminListAllTopups } from "../../../feature/admin";
-import { formatCurrency, formatDate } from "../../../utils/format";
 import type { ITopupRequest } from "../../../types/topup";
+import { formatCurrency, formatDate } from "../../../utils/format";
 
 const topupSortOptions: SortOption<ITopupRequest>[] = [
   {
@@ -67,6 +66,7 @@ export default function AdminTopupsPage() {
         items={data?.pages?.flatMap((v) => v.data ?? []) || []}
         searchPlaceholder="Cari referensi, bank, status, atau user"
         sortOptions={topupSortOptions}
+        isLoading={isFetchingNextPage || isLoading}
         renderItem={(topup) => (
           <div
             key={topup._id}
@@ -93,7 +93,6 @@ export default function AdminTopupsPage() {
       {(hasNextPage || isFetching) && (
         <div ref={ref} className="h-5 w-full"></div>
       )}
-      {(isFetchingNextPage || isLoading) && <Loading />}
     </div>
   );
 }
