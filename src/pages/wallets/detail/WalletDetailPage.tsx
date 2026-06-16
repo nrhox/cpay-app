@@ -34,14 +34,15 @@ export default function WalletDetailPage() {
     }
   }, [fetchNextPage, hasNextPage, inView, isFetchingNextPage]);
 
-  if (!dataWallet?.data) return <EmptyState title="Wallet tidak ditemukan" />;
   if (isLoadingWallet) return <Loading />;
+  if (!isLoadingWallet && !dataWallet?.data)
+    return <EmptyState title="Wallet tidak ditemukan" />;
 
   return (
     <div className="grid gap-5">
       <PageHeader
-        title={dataWallet.data.name}
-        description={formatAccount(dataWallet.data.account_number)}
+        title={dataWallet?.data?.name || "-"}
+        description={formatAccount(dataWallet?.data?.account_number ?? "")}
         actions={
           <Link to="/wallets">
             <Button type="button" variant="secondary">
@@ -50,24 +51,24 @@ export default function WalletDetailPage() {
           </Link>
         }
       />
-      <WalletCard wallet={dataWallet.data} />
+      <WalletCard wallet={dataWallet?.data} />
       <Card>
         <h2 className="subheading">Rincian rekening</h2>
         <div className="text-primary mt-3 grid gap-2 text-sm sm:grid-cols-2">
-          <p>Status: {dataWallet.data.status}</p>
-          <p>Dibuat pada: {formatDate(dataWallet.data.created_at)}</p>
+          <p>Status: {dataWallet?.data?.status}</p>
+          <p>Dibuat pada: {formatDate(dataWallet?.data?.created_at ?? "")}</p>
           <p>Mata Uang: IDR</p>
-          <p>Jenis: {dataWallet.data.is_primary ? "Utama" : "Alternatif"}</p>
+          <p>Jenis: {dataWallet?.data?.is_primary ? "Utama" : "Alternatif"}</p>
         </div>
       </Card>
       <Card>
         <h2 className="subheading mb-3">Transaksi</h2>
         {!isLoadingTransaction &&
-          dataTransaction?.pages.map((group, i) => (
+          dataTransaction?.pages?.map((group, i) => (
             <TransactionList
               key={i}
               userId={userId}
-              transactions={group.data ?? []}
+              transactions={group?.data ?? []}
             />
           ))}
         {(hasNextPage || isFetching) && (
