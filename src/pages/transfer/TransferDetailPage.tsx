@@ -1,4 +1,5 @@
 import { Link, useParams } from "react-router";
+import { ArrowLeft } from "lucide-react";
 import Loading from "../../components/general/loading";
 import TransactionDetailCard from "../../components/transactions/TransactionDetailCard";
 import Button from "../../components/ui/Button";
@@ -20,9 +21,14 @@ export default function TransferDetailPage() {
         title="Detail Transaksi"
         description="Rincian transaksi anda."
         actions={
-          <Link to="/transactions">
-            <Button type="button" variant="secondary">
-              Back
+          <Link to="/transactions" className="no-print">
+            <Button
+              type="button"
+              variant="secondary"
+              className="flex items-center gap-1.5 hover:bg-gray-50"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Kembali
             </Button>
           </Link>
         }

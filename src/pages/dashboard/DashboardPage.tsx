@@ -13,8 +13,8 @@ import { formatCurrency } from "../../utils/format";
 const quickActions = [
   { label: "Top Up", href: "/topup", icon: Banknote },
   { label: "Transfer", href: "/transfer", icon: Send },
-  { label: "Create Code", href: "/payment-codes/create", icon: QrCode },
-  { label: "Pay", href: "/pay", icon: CreditCard },
+  { label: "Buat Kode", href: "/payment-codes/create", icon: QrCode },
+  { label: "Bayar", href: "/pay", icon: CreditCard },
 ];
 
 export default function DashboardPage() {

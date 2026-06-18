@@ -5,12 +5,11 @@ import AdminListView, {
   type SortOption,
 } from "../../../components/admin/AdminListView";
 import { StatusTone } from "../../../components/admin/tone";
-import Loading from "../../../components/general/loading";
 import Badge from "../../../components/ui/Badge";
 import PageHeader from "../../../components/ui/PageHeader";
 import { useAdminListAllPaymentCodes } from "../../../feature/admin";
-import { formatCurrency, formatDate } from "../../../utils/format";
 import type { IPaymentCode } from "../../../types/paymentCode";
+import { formatCurrency, formatDate } from "../../../utils/format";
 
 const paymentCodeSortOptions: SortOption<IPaymentCode>[] = [
   {
@@ -67,6 +66,7 @@ export default function AdminPaymentCodesPage() {
         items={data?.pages?.flatMap((v) => v.data ?? []) || []}
         searchPlaceholder="Cari merchant, kode atau status"
         sortOptions={paymentCodeSortOptions}
+        isLoading={isFetchingNextPage || isLoading}
         renderItem={(paymentCode) => (
           <div
             key={paymentCode._id}
@@ -100,7 +100,6 @@ export default function AdminPaymentCodesPage() {
       {(hasNextPage || isFetching) && (
         <div ref={ref} className="h-5 w-full"></div>
       )}
-      {(isFetchingNextPage || isLoading) && <Loading />}
     </div>
   );
 }

@@ -5,12 +5,11 @@ import AdminListView, {
   type SortOption,
 } from "../../../components/admin/AdminListView";
 import { StatusTone } from "../../../components/admin/tone";
-import Loading from "../../../components/general/loading";
 import Badge from "../../../components/ui/Badge";
 import PageHeader from "../../../components/ui/PageHeader";
 import { useAdminGetAllUsers } from "../../../feature/admin";
-import { formatDate } from "../../../utils/format";
 import type { IUser } from "../../../types/user";
+import { formatDate } from "../../../utils/format";
 
 const UserSortOptions: SortOption<IUser>[] = [
   {
@@ -69,6 +68,7 @@ export default function AdminUsersPage() {
         items={data?.pages?.flatMap((v) => v.data ?? []) || []}
         searchPlaceholder="Cari nama, email, atau phone"
         sortOptions={UserSortOptions}
+        isLoading={isFetchingNextPage || isLoading}
         renderItem={(user) => (
           <Link
             key={user._id}
@@ -93,7 +93,6 @@ export default function AdminUsersPage() {
       {(hasNextPage || isFetching) && (
         <div ref={ref} className="h-5 w-full"></div>
       )}
-      {(isFetchingNextPage || isLoading) && <Loading />}
     </div>
   );
 }
