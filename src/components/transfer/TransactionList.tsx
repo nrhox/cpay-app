@@ -23,8 +23,8 @@ export default function TransactionList({
           to={`/transactions/${transaction.reference}`}
           className="block"
         >
-          <div className="border-light-gray flex items-center gap-3 rounded-lg border bg-white p-4">
-            <div className="bg-primary-50 text-primary-700 grid h-10 w-10 shrink-0 place-items-center rounded-md">
+          <div className="border-neutral-muted bg-neutral-surface flex items-center gap-3 rounded-lg border p-4">
+            <div className="bg-primary-soft text-primary grid h-10 w-10 shrink-0 place-items-center rounded-md">
               {getTransactionDirection(transaction, userId ?? "") === "IN" ? (
                 <ArrowDownLeft size={20} />
               ) : (
@@ -32,10 +32,10 @@ export default function TransactionList({
               )}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-primary truncate text-sm font-semibold">
+              <p className="text-neutral-text truncate text-sm font-semibold">
                 {transaction.reference}
               </p>
-              <p className="caption text-primary truncate">
+              <p className="caption text-neutral-text truncate">
                 {transaction.type !== "TOPUP" &&
                 getTransactionDirection(transaction, userId ?? "") === "IN"
                   ? "Dari " +
@@ -54,7 +54,7 @@ export default function TransactionList({
               className={
                 getTransactionDirection(transaction, userId ?? "") === "IN"
                   ? "text-success text-sm font-bold"
-                  : "text-primary text-sm font-bold"
+                  : "text-neutral-text text-sm font-bold"
               }
             >
               {getTransactionDirection(transaction, userId ?? "") === "IN"
@@ -62,7 +62,7 @@ export default function TransactionList({
                 : "-"}
               {formatCurrency(transaction.amount)}
             </p>
-            <ChevronRight className="text-primary shrink-0" size={18} />
+            <ChevronRight className="text-neutral-text shrink-0" size={18} />
           </div>
         </Link>
       ))}

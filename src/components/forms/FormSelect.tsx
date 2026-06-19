@@ -16,14 +16,14 @@ export default function FormSelect({
 }: FormSelectProps) {
   return (
     <label className="block">
-      <span className="caption text-primary mb-1 block">{label}</span>
+      <span className="caption text-neutral-muted mb-1 block">{label}</span>
       <select
         autoComplete="off"
         autoCorrect="off"
         spellCheck="false"
         aria-autocomplete="none"
         className={clsx(
-          "border-light-gray focus:border-primary-500 focus:ring-primary-500 w-full rounded-md text-sm",
+          "border-neutral-muted focus:border-primary focus:ring-primary bg-neutral-surface text-neutral-text w-full rounded-md text-sm",
           className,
         )}
         {...props}

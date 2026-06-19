@@ -7,20 +7,20 @@ export default function LegalPage() {
   const tableOfContent = LegalData.map((v) => ({ id: v.id, title: v.title }));
 
   return (
-    <main className="bg-background min-h-screen py-5 sm:px-6 lg:px-8">
+    <main className="bg-neutral-bg min-h-screen py-5 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-3xl">
         <div className="px-4 sm:px-0">
           <button
             onClick={() => navigate(-1)}
-            className="mb-6 inline-flex cursor-pointer items-center gap-2 text-sm font-semibold text-black transition-colors duration-150 hover:text-black"
+            className="text-neutral-text mb-6 inline-flex cursor-pointer items-center gap-2 text-sm font-semibold"
           >
             <ArrowLeft size={16} />
             <span>Kembali</span>
           </button>
         </div>
 
-        <article className="border-light-gray space-y-8 border-y bg-white px-4 py-8 sm:rounded-lg sm:border sm:p-12">
-          <header className="border-light-gray border-b pb-5 text-black">
+        <article className="border-neutral-muted bg-neutral-surface space-y-8 border-y px-4 py-8 sm:rounded-lg sm:border sm:p-12">
+          <header className="border-neutral-muted text-neutral-text border-b pb-5">
             <h1 className="heading">Kebijakan & Ketentuan Layanan</h1>
             <p className="paragraph mt-3">
               Dokumen resmi Kebijakan Privasi dan Ketentuan Layanan CPay Bank.
@@ -44,7 +44,7 @@ export default function LegalPage() {
                 <a
                   href={"#" + heading.id}
                   key={i}
-                  className="subheading text-primary-600 hover:underline"
+                  className="subheading text-primary hover:underline"
                 >
                   {i + 1}. {heading.title}
                 </a>
@@ -58,12 +58,12 @@ export default function LegalPage() {
               key={section.id}
               className="scroll-mt-6 space-y-8"
             >
-              <div className="border-light-gray border-b pb-4 text-black">
+              <div className="border-neutral-muted text-neutral-text border-b pb-4">
                 <h2 className="subheading">
                   {i + 1}. {section.title}
                 </h2>
                 {section.description && (
-                  <p className="paragraph mt-2 text-black">
+                  <p className="paragraph text-neutral-text mt-2">
                     {section.description}
                   </p>
                 )}
@@ -78,9 +78,9 @@ export default function LegalPage() {
                         {content.items.map((item, idx) => (
                           <li
                             key={idx}
-                            className="paragraph flex items-start gap-2 text-black"
+                            className="paragraph text-neutral-text flex items-start gap-2"
                           >
-                            <span className="mt-2 inline-block h-1 w-1 shrink-0 rounded-full bg-black" />
+                            <span className="bg-neutral-text mt-2 inline-block h-1 w-1 shrink-0 rounded-full" />
                             <span>{item}</span>
                           </li>
                         ))}
@@ -92,10 +92,10 @@ export default function LegalPage() {
             </section>
           ))}
 
-          <section id="contact" className="border-light-gray border-t pt-4">
-            <div className="pb-2 text-black">
+          <section id="contact" className="border-neutral-muted border-t pt-4">
+            <div className="text-neutral-text pb-2">
               <h2 className="subheading">Kontak</h2>
-              <p className="paragraph mt-2 text-black">
+              <p className="paragraph text-neutral-text mt-2">
                 Pertanyaan seputar kebijakan privasi dan permintaan penghapusan
                 akun dapat diajukan via
               </p>
@@ -106,15 +106,15 @@ export default function LegalPage() {
                 {ContactInfo.map((contact, idx) => (
                   <li
                     key={idx}
-                    className="paragraph flex items-start gap-2 text-black"
+                    className="paragraph text-neutral-text flex items-start gap-2"
                   >
-                    <span className="mt-2 inline-block h-1 w-1 shrink-0 rounded-full bg-black" />
+                    <span className="bg-neutral-text mt-2 inline-block h-1 w-1 shrink-0 rounded-full" />
                     {contact.platform}:{" "}
                     <a
                       href={contact.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="font-semibold text-blue-500 hover:underline"
+                      className="text-primary font-semibold hover:underline"
                     >
                       @{contact.username}
                     </a>
@@ -124,7 +124,7 @@ export default function LegalPage() {
             </div>
           </section>
 
-          <footer className="border-light-gray border-t pt-8">
+          <footer className="border-neutral-muted border-t pt-8">
             <div className="flex gap-4 rounded-lg border border-amber-200 bg-amber-50 p-4">
               <Info className="mt-0.5 shrink-0 text-amber-600" size={20} />
               <div className="space-y-1">
@@ -143,7 +143,7 @@ export default function LegalPage() {
           </footer>
         </article>
 
-        <div className="mt-8 text-center text-sm text-black">
+        <div className="text-neutral-text mt-8 text-center text-sm">
           <p>© {new Date().getFullYear()} CPay Bank.</p>
         </div>
       </div>

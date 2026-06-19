@@ -107,7 +107,7 @@ export default function PinInput({
     <div>
       <form onSubmit={handleSubmit}>
         <label className="block">
-          <span className="caption text-primary mb-1 block">{label}</span>
+          <span className="caption text-neutral-text mb-1 block">{label}</span>
           <div className="flex gap-2">
             {values.pin.map((digit, index) => {
               const isFieldTouched = Array.isArray(touched.pin)
@@ -128,8 +128,8 @@ export default function PinInput({
                   className={clsx(
                     "w-full rounded-md text-center text-sm font-semibold tracking-[0.4em]",
                     hasError
-                      ? "border-danger focus:border-danger focus:ring-danger"
-                      : "border-light-gray focus:border-primary-500 focus:ring-primary-500",
+                      ? "border-danger focus:ring-danger"
+                      : "border-primary focus:ring-primary",
                   )}
                   inputMode="numeric"
                   name="pin"
@@ -148,7 +148,7 @@ export default function PinInput({
           </div>
         </label>
       </form>
-      <p className="caption text-primary mt-3">{helper}</p>
+      <p className="caption text-neutral-text mt-3">{helper}</p>
     </div>
   );
 }

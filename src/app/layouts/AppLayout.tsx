@@ -16,9 +16,9 @@ export default function AppLayout() {
     : userNavigation;
 
   return (
-    <div className="bg-background h-full w-full">
-      <div className="bg-background relative mx-auto min-h-screen max-w-7xl">
-        <header className="border-light-gray sticky top-0 z-40 border-b bg-white md:hidden">
+    <div className="bg-neutral-bg h-full w-full">
+      <div className="bg-neutral-bg relative mx-auto min-h-screen max-w-7xl">
+        <header className="border-neutral-muted bg-neutral-surface sticky top-0 z-40 border-b md:hidden">
           <div className="mx-auto flex items-center justify-between px-4 pt-2 pb-3">
             <Link to={currentUser?.role === 2 ? "/admin" : "/dashboard"}>
               <img src={BRAND} className="h-10" alt="cpay" />
@@ -37,7 +37,7 @@ export default function AppLayout() {
         <div className="mx-auto grid grid-cols-1 md:grid-cols-[248px_1fr]">
           <aside
             className={clsx(
-              "border-primary md:bg-background border-b bg-white p-3 md:sticky md:top-0 md:block md:h-screen md:border-none",
+              "border-neutral-muted md:bg-neutral-bg bg-neutral-surface border-b p-3 md:sticky md:top-0 md:block md:h-screen md:border-none",
               open ? "block" : "hidden",
             )}
           >
@@ -46,11 +46,11 @@ export default function AppLayout() {
                 <img src={BRAND} className="h-10" alt="cpay" />
               </Link>
             </div>
-            <div className="bg-primary-50 mb-4 rounded-lg p-3">
-              <p className="text-primary text-sm font-bold">
+            <div className="bg-primary-soft mb-4 rounded-lg p-3">
+              <p className="text-neutral-text text-sm font-bold">
                 {currentUser?.full_name}
               </p>
-              <p className="caption text-primary">{currentUser?.email}</p>
+              <p className="caption text-neutral-text">{currentUser?.email}</p>
             </div>
             <nav className="grid gap-1">
               {navigation.map((item) => (
@@ -63,8 +63,8 @@ export default function AppLayout() {
                     clsx(
                       "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-semibold",
                       isActive
-                        ? "bg-primary-600 text-white"
-                        : "text-primary hover:bg-primary-50 hover:text-primary",
+                        ? "bg-primary text-primary-contrast"
+                        : "text-neutral-text hover:bg-primary-soft hover:text-neutral-text",
                     )
                   }
                 >

@@ -14,7 +14,7 @@ export default function PageHeader({
       <div>
         <h1 className="heading">{title}</h1>
         {description ? (
-          <p className="paragraph text-primary mt-1">{description}</p>
+          <p className="paragraph text-neutral-muted mt-1">{description}</p>
         ) : null}
       </div>
       {actions ? <div className="flex flex-wrap gap-2">{actions}</div> : null}

@@ -54,7 +54,7 @@ export default function WalletDetailPage() {
       <WalletCard wallet={dataWallet?.data} />
       <Card>
         <h2 className="subheading">Rincian rekening</h2>
-        <div className="text-primary mt-3 grid gap-2 text-sm sm:grid-cols-2">
+        <div className="text-neutral-text mt-3 grid gap-2 text-sm sm:grid-cols-2">
           <p>Status: {dataWallet?.data?.status}</p>
           <p>Dibuat pada: {formatDate(dataWallet?.data?.created_at ?? "")}</p>
           <p>Mata Uang: IDR</p>

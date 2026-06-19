@@ -60,15 +60,17 @@ export default function AdminUserDetailPage() {
           <div className="flex items-center gap-4">
             <img
               src={data?.data?.avatar_url}
-              className="border-primary size-20 rounded-full border-2"
+              className="border-neutral-text size-20 rounded-full border-2"
             />
             <div>
               <h2 className="subheading">
                 {data?.data?.full_name} -{" "}
                 {data?.data?.role === 2 ? "Admin" : "User"}
               </h2>
-              <p className="paragraph text-primary mt-1">{data?.data?.email}</p>
-              <p className="paragraph text-primary mt-1">
+              <p className="paragraph text-neutral-text mt-1">
+                {data?.data?.email}
+              </p>
+              <p className="paragraph text-neutral-text mt-1">
                 Masuk pada {formatDate(data?.data?.created_at ?? "")}
               </p>
             </div>
@@ -76,7 +78,7 @@ export default function AdminUserDetailPage() {
           <Badge label={data?.data?.status ?? ""} tone="success" />
         </div>
 
-        <div className="text-primary mt-5 flex flex-col gap-2">
+        <div className="text-neutral-text mt-5 flex flex-col gap-2">
           <h3 className="text-lg">Masuk menggunakan</h3>
           {data?.data?.oauth_providers.map((prov, i) => (
             <p key={i} className="text-base capitalize">

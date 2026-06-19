@@ -73,7 +73,7 @@ export default function CreateWalletPage() {
               disabled={isPending || isSuccess}
               onComplete={(v) => setFieldValue("pin", v)}
             />
-            {errors.pin && <p className="text-red-500">{errors.pin}</p>}
+            {errors.pin && <p className="text-danger">{errors.pin}</p>}
           </div>
 
           <Button type="submit">

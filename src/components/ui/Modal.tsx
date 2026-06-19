@@ -15,8 +15,8 @@ export default function Modal({
 }) {
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/40 p-4">
-      <div className="w-full max-w-md rounded-lg bg-white p-4 shadow-lg">
+    <div className="bg-neutral-text/40 fixed inset-0 z-50 grid place-items-center p-4">
+      <div className="bg-neutral-surface w-full max-w-md rounded-lg p-4 shadow-lg">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="subheading">{title}</h2>
           <Button

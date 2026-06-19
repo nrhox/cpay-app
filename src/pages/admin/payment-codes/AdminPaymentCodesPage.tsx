@@ -76,16 +76,16 @@ export default function AdminPaymentCodesPage() {
               to={`/admin/payment-codes/${paymentCode._id}`}
               className="min-w-0 flex-1"
             >
-              <p className="text-primary text-sm font-semibold">
+              <p className="text-neutral-text text-sm font-semibold">
                 {paymentCode.merchant}
               </p>
-              <p className="caption text-primary">
+              <p className="caption text-neutral-text">
                 {paymentCode.code} | Expires{" "}
                 {formatDate(paymentCode.expires_at)}
               </p>
             </Link>
             <div className="flex flex-wrap items-center gap-2">
-              <p className="text-primary text-sm font-bold">
+              <p className="text-neutral-text text-sm font-bold">
                 {formatCurrency(paymentCode.amount)}
               </p>
               <Badge

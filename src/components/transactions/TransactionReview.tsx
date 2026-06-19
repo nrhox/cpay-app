@@ -14,11 +14,13 @@ export default function TransactionReview({
 }) {
   return (
     <Card className={className}>
-      <div className="text-primary grid gap-3 text-sm">
+      <div className="text-neutral-text grid gap-3 text-sm">
         {items.map((item) => (
           <div key={item.label} className="grid gap-1">
-            <p className="caption text-primary">{item.label}</p>
-            <p className="text-primary font-semibold">{item.value || "-"}</p>
+            <p className="caption text-neutral-text">{item.label}</p>
+            <p className="text-neutral-text font-semibold">
+              {item.value || "-"}
+            </p>
           </div>
         ))}
       </div>

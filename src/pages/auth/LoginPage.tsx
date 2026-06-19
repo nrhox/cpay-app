@@ -34,14 +34,14 @@ export default function LoginPage() {
   const errMsg = param.get("error");
 
   return (
-    <main className="bg-background grid min-h-screen place-items-center px-4">
+    <main className="bg-neutral-bg grid min-h-screen place-items-center px-4">
       <Card className="w-full max-w-md">
         <img src={BRAND} className="h-14" alt="cpay" />
-        <p className="paragraph text-primary mt-1 mb-2">
+        <p className="paragraph text-neutral-text mt-1 mb-2">
           Masuk ke digital wallet dan banking workspace Anda.{" "}
           <Link
             to="/legal"
-            className="text-primary-600 hover:text-primary-700 text-sm font-semibold"
+            className="text-primary hover:text-primary-hover text-sm font-semibold"
           >
             Lihat Kebijakan & Ketentuan
           </Link>
@@ -51,7 +51,7 @@ export default function LoginPage() {
         )}
         {!loading ? (
           <div className="mt-2">
-            <p className="paragraph text-primary mb-2">Masuk dengan</p>
+            <p className="paragraph text-neutral-text mb-2">Masuk dengan</p>
             <div className="space-y-2">
               {listProviders.map((provider) => (
                 <a
@@ -61,7 +61,7 @@ export default function LoginPage() {
                   }}
                   key={provider.name}
                   href={`${BASE_URL_BACKEND}/api/auth/${provider.name}`}
-                  className="border-light-gray bg-surface flex items-center rounded-lg border px-3 py-2 text-base shadow-sm select-none hover:bg-gray-100 active:bg-gray-200"
+                  className="border-neutral-muted bg-neutral-surface hover:bg-neutral-bg/60 active:bg-neutral-bg flex items-center rounded-lg border px-3 py-2 text-base shadow-sm select-none"
                 >
                   <img
                     src={provider.brandLogo}

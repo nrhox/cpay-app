@@ -18,11 +18,11 @@ export default function Badge({
   return (
     <span
       className={clsx(
-        "inline-flex rounded-full px-2.5 py-1 text-xs font-semibold",
-        tone === "neutral" && "bg-primary-50 text-primary-700",
-        tone === "success" && "bg-emerald-50 text-emerald-700",
-        tone === "warning" && "bg-amber-50 text-amber-700",
-        tone === "danger" && "bg-red-50 text-red-700",
+        "inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold",
+        tone === "neutral" && "bg-primary-soft text-primary border-primary/20",
+        tone === "success" && "bg-success/10 text-success border-success/20",
+        tone === "warning" && "bg-warning/10 text-warning border-warning/20",
+        tone === "danger" && "bg-danger/10 text-danger border-danger/20",
       )}
     >
       {label}

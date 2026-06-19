@@ -73,15 +73,15 @@ export default function AdminTopupsPage() {
             className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between"
           >
             <Link to={`/admin/topups/${topup._id}`} className="min-w-0 flex-1">
-              <p className="text-primary text-sm font-semibold">
+              <p className="text-neutral-text text-sm font-semibold">
                 {topup.wallet_id} | {topup.reference}
               </p>
-              <p className="caption text-primary">
+              <p className="caption text-neutral-text">
                 {formatDate(topup.requested_at)} | {topup.user_id}
               </p>
             </Link>
             <div className="flex flex-wrap items-center gap-2">
-              <p className="text-primary text-sm font-bold">
+              <p className="text-neutral-text text-sm font-bold">
                 {formatCurrency(topup.amount)}
               </p>
               <Badge label={topup.status} tone={TopupTone(topup.status)} />

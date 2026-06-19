@@ -8,10 +8,10 @@ export default function EmptyState({
   children?: ReactNode;
 }) {
   return (
-    <div className="border-light-gray rounded-lg border border-dashed bg-white p-6 text-center">
+    <div className="border-neutral-muted bg-neutral-surface rounded-lg border border-dashed p-6 text-center">
       <p className="subheading">{title}</p>
       {children ? (
-        <div className="paragraph text-primary mt-2">{children}</div>
+        <div className="paragraph text-neutral-muted mt-2">{children}</div>
       ) : null}
     </div>
   );
