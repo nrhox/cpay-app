@@ -11,7 +11,7 @@ export default function Card({
   return (
     <section
       className={clsx(
-        "border-light-gray bg-surface rounded-lg border p-4 shadow-sm",
+        "border-neutral-muted bg-neutral-surface rounded-lg border p-4 shadow-sm",
         className,
       )}
     >

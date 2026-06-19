@@ -12,7 +12,7 @@ export default function PaymentCodeCard({
   return (
     <Card>
       <div className="flex items-start justify-between gap-4">
-        <div className="bg-primary-50 text-primary-700 grid h-11 w-11 place-items-center rounded-md">
+        <div className="bg-primary-soft text-primary grid h-11 w-11 place-items-center rounded-md">
           <QrCode size={22} />
         </div>
         <Badge
@@ -21,11 +21,13 @@ export default function PaymentCodeCard({
         />
       </div>
       <p className="subheading mt-4">{paymentCode?.merchant ?? "-"}</p>
-      <p className="subheading text-primary mt-1">{paymentCode?.code ?? "-"}</p>
-      <p className="text-primary mt-3 font-bold">
+      <p className="subheading text-neutral-text mt-1">
+        {paymentCode?.code ?? "-"}
+      </p>
+      <p className="text-neutral-text mt-3 font-bold">
         {formatCurrency(paymentCode?.amount ?? 0)}
       </p>
-      <p className="caption text-primary mt-2">
+      <p className="caption text-neutral-text mt-2">
         Expires {formatDate(paymentCode?.expires_at ?? "")}
       </p>
     </Card>

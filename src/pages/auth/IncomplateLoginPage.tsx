@@ -58,10 +58,12 @@ export default function IncomplatePage() {
   });
 
   return (
-    <main className="bg-background grid min-h-screen place-items-center px-4">
+    <main className="bg-neutral-bg grid min-h-screen place-items-center px-4">
       <Card className="w-full max-w-md">
         <img src={BRAND} className="h-14" alt="cpay" />
-        <p className="paragraph text-primary mt-1">Selesaikan pendafataran</p>
+        <p className="paragraph text-neutral-text mt-1">
+          Selesaikan pendafataran
+        </p>
         <div className="mt-4">
           <div className="mb-4 space-y-4">
             <FormInput
@@ -77,7 +79,7 @@ export default function IncomplatePage() {
                 disabled={isPending || isSuccess}
                 onComplete={(v) => setFieldValue("pin", v)}
               />
-              {errors.pin && <p className="text-red-500">{errors.pin}</p>}
+              {errors.pin && <p className="text-danger">{errors.pin}</p>}
             </div>
           </div>
 

@@ -1,5 +1,5 @@
-import { Link, useParams } from "react-router";
 import { ArrowLeft } from "lucide-react";
+import { Link, useParams } from "react-router";
 import Loading from "../../components/general/loading";
 import TransactionDetailCard from "../../components/transactions/TransactionDetailCard";
 import Button from "../../components/ui/Button";
@@ -25,7 +25,7 @@ export default function TransferDetailPage() {
             <Button
               type="button"
               variant="secondary"
-              className="flex items-center gap-1.5 hover:bg-gray-50"
+              className="hover:bg-neutral-bg flex items-center gap-1.5"
             >
               <ArrowLeft className="h-4 w-4" />
               Kembali

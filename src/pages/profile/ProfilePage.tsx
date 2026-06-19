@@ -20,12 +20,12 @@ export default function ProfilePage() {
           <div className="flex items-center gap-4">
             <img
               src={user?.avatar_url}
-              className="border-primary size-20 rounded-full border-2"
+              className="border-neutral-text size-20 rounded-full border-2"
             />
             <div>
               <h2 className="subheading">{user?.full_name}</h2>
-              <p className="paragraph text-primary mt-1">{user?.email}</p>
-              <p className="paragraph text-primary mt-1">
+              <p className="paragraph text-neutral-text mt-1">{user?.email}</p>
+              <p className="paragraph text-neutral-text mt-1">
                 Masuk pada {formatDate(user?.created_at ?? "")}
               </p>
             </div>
@@ -33,7 +33,7 @@ export default function ProfilePage() {
           <Badge label={user?.status ?? ""} tone="success" />
         </div>
 
-        <div className="text-primary mt-5 flex flex-col gap-2">
+        <div className="text-neutral-text mt-5 flex flex-col gap-2">
           <h3 className="text-lg">Masuk menggunakan</h3>
           {user?.oauth_providers.map((prov, i) => (
             <p key={i} className="text-base capitalize">
@@ -42,15 +42,15 @@ export default function ProfilePage() {
           ))}
         </div>
 
-        <div className="text-primary mt-5 flex flex-col gap-2 border-t border-gray-200/50 pt-4">
+        <div className="text-neutral-text border-neutral-muted mt-5 flex flex-col gap-2 border-t pt-4">
           <h3 className="subheading">Kebijakan & Ketentuan</h3>
-          <p className="paragraph text-gray-500">
+          <p className="paragraph text-neutral-muted">
             Baca dokumen resmi Kebijakan Privasi dan Ketentuan Layanan CPay
             Bank.
           </p>
           <Link
             to="/legal"
-            className="text-primary-600 hover:text-primary-700 mt-1 flex items-center gap-2 text-sm font-semibold"
+            className="text-primary hover:text-primary-hover mt-1 flex items-center gap-2 text-sm font-semibold"
           >
             <Scale size={16} />
             Lihat Kebijakan & Ketentuan

@@ -73,13 +73,13 @@ export default function AdminUsersPage() {
           <Link
             key={user._id}
             to={`/admin/users/${user._id}`}
-            className="hover:bg-primary-50 flex items-center justify-between gap-3 p-4"
+            className="hover:bg-primary-soft flex items-center justify-between gap-3 p-4"
           >
             <div>
-              <p className="text-primary text-sm font-semibold">
+              <p className="text-neutral-text text-sm font-semibold">
                 {user.full_name}
               </p>
-              <p className="caption text-primary">
+              <p className="caption text-neutral-text">
                 {user.email} | {formatDate(user.created_at)}
               </p>
             </div>

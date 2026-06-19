@@ -44,30 +44,30 @@ function TransactionParty({
 }) {
   return (
     <Card className="p-4">
-      <h3 className="text-primary-950 mb-2 border-b border-gray-200 pb-3 text-base font-bold">
+      <h3 className="text-neutral-text border-neutral-muted mb-2 border-b pb-3 text-base font-bold">
         {title}
       </h3>
 
       <div className="grid grid-cols-1 gap-x-8 gap-y-2 text-sm md:grid-cols-2">
         {party.user_id !== currentUserId && (
-          <div className="flex items-center justify-between border-b border-gray-50 py-1">
-            <span className="text-primary">Nama Pengguna</span>
-            <span className="text-primary-950 font-semibold">
+          <div className="border-neutral-muted flex items-center justify-between border-b pt-1 pb-2">
+            <span className="text-neutral-text">Nama Pengguna</span>
+            <span className="text-neutral-text font-semibold">
               {party.username || "-"}
             </span>
           </div>
         )}
 
-        <div className="flex items-center justify-between border-b border-gray-50 py-1">
-          <span className="text-primary">Nama Dompet</span>
-          <span className="text-primary-950 font-semibold">
+        <div className="border-neutral-muted flex items-center justify-between border-b pt-1 pb-2">
+          <span className="text-neutral-text">Nama Dompet</span>
+          <span className="text-neutral-text font-semibold">
             {party.wallet_name || "-"}
           </span>
         </div>
 
-        <div className="flex items-center justify-between border-b border-gray-50 py-1">
-          <span className="text-primary">Nomor Rekening</span>
-          <span className="text-primary-950 font-mono font-semibold">
+        <div className="border-neutral-muted flex items-center justify-between border-b pt-1 pb-2">
+          <span className="text-neutral-text">Nomor Rekening</span>
+          <span className="text-neutral-text font-mono font-semibold">
             {party.account_number ? formatAccount(party.account_number) : "-"}
           </span>
         </div>
@@ -95,20 +95,20 @@ export default function TransactionDetailCard({
   return (
     <div className="w-full space-y-4">
       <Card className="p-4">
-        <h3 className="text-primary-950 mb-2 border-b border-gray-200 pb-3 text-base font-bold">
+        <h3 className="text-neutral-text border-neutral-muted mb-2 border-b pb-3 text-base font-bold">
           Informasi Transaksi
         </h3>
 
-        <div className="grid grid-cols-1 gap-x-8 gap-y-2 text-sm md:grid-cols-2">
-          <div className="flex items-center justify-between border-b border-gray-50 py-1">
-            <span className="text-primary">Nomor Referensi</span>
-            <div className="text-primary-950 flex items-center gap-1.5 font-mono font-semibold">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-1.5 text-sm md:grid-cols-2">
+          <div className="border-neutral-muted flex items-center justify-between border-b pt-1 pb-2">
+            <span className="text-neutral-text">Nomor Referensi</span>
+            <div className="text-neutral-text flex items-center gap-1.5 font-mono font-semibold">
               <span className="select-all">
                 {transaction?.reference || "-"}
               </span>
               <button
                 onClick={() => handleCopy(transaction?.reference || "")}
-                className="hover:text-primary-600 rounded p-1 text-gray-400 transition hover:bg-gray-100"
+                className="hover:text-primary text-neutral-muted hover:bg-neutral-bg rounded p-1 transition"
                 title="Salin Referensi"
               >
                 {copiedRef ? (
@@ -120,15 +120,15 @@ export default function TransactionDetailCard({
             </div>
           </div>
 
-          <div className="flex items-center justify-between border-b border-gray-50 py-1">
-            <span className="text-primary">Jenis Transaksi</span>
-            <span className="text-primary-950 font-semibold">
+          <div className="border-neutral-muted flex items-center justify-between border-b pt-1 pb-2">
+            <span className="text-neutral-text">Jenis Transaksi</span>
+            <span className="text-neutral-text font-semibold">
               {getTransactionTypeLabel(transaction?.type)}
             </span>
           </div>
 
-          <div className="flex items-center justify-between border-b border-gray-50 py-1">
-            <span className="text-primary">Status</span>
+          <div className="border-neutral-muted flex items-center justify-between border-b pt-1 pb-2">
+            <span className="text-neutral-text">Status</span>
             <span
               className={`font-semibold ${transaction?.status === "SUCCESS" ? "text-success" : transaction?.status === "PENDING" ? "text-warning" : "text-danger"}`}
             >
@@ -136,32 +136,32 @@ export default function TransactionDetailCard({
             </span>
           </div>
 
-          <div className="flex items-center justify-between border-b border-gray-50 py-1">
-            <span className="text-primary">Jumlah</span>
-            <span className="text-primary-950 font-bold">
+          <div className="border-neutral-muted flex items-center justify-between border-b pt-1 pb-2">
+            <span className="text-neutral-text">Jumlah</span>
+            <span className="text-neutral-text font-bold">
               {formatCurrency(transaction?.amount || 0)}
             </span>
           </div>
 
-          <div className="flex items-center justify-between border-b border-gray-50 py-1">
-            <span className="text-primary">Mata Uang</span>
-            <span className="text-primary-950 font-semibold">
+          <div className="border-neutral-muted flex items-center justify-between border-b pt-1 pb-2">
+            <span className="text-neutral-text">Mata Uang</span>
+            <span className="text-neutral-text font-semibold">
               {transaction?.currency || "-"}
             </span>
           </div>
 
-          <div className="flex items-center justify-between border-b border-gray-50 py-1">
-            <span className="text-primary">Tanggal &amp; Waktu</span>
-            <span className="text-primary-950 font-semibold">
+          <div className="border-neutral-muted flex items-center justify-between border-b pt-1 pb-2">
+            <span className="text-neutral-text">Tanggal &amp; Waktu</span>
+            <span className="text-neutral-text font-semibold">
               {transaction?.created_at
                 ? formatDate(transaction.created_at)
                 : "-"}
             </span>
           </div>
 
-          <div className="flex items-start justify-between border-b border-gray-50 py-1">
-            <span className="text-primary">Catatan</span>
-            <span className="text-primary-950 max-w-50 text-right font-semibold wrap-break-word">
+          <div className="border-neutral-muted flex items-start justify-between border-b pt-1 pb-2">
+            <span className="text-neutral-text">Catatan</span>
+            <span className="text-neutral-text max-w-50 text-right font-semibold wrap-break-word">
               {transaction?.note || "-"}
             </span>
           </div>

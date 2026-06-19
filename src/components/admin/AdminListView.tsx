@@ -90,11 +90,11 @@ export default function AdminListView<T extends object>({
       <div className="grid gap-3 md:grid-cols-[1fr_240px]">
         <label className="relative block">
           <Search
-            className="text-primary pointer-events-none absolute top-1/2 left-3 -translate-y-1/2"
+            className="text-neutral-text pointer-events-none absolute top-1/2 left-3 -translate-y-1/2"
             size={17}
           />
           <Input
-            className="border-light-gray focus:border-primary-500 focus:ring-primary-500 w-full rounded-md pl-10 text-sm"
+            className="border-neutral-muted focus:border-primary focus:ring-primary w-full rounded-md pl-10 text-sm"
             placeholder={searchPlaceholder}
             value={localSearch}
             onChange={(event) => setLocalSearch(event.target.value)}
@@ -103,16 +103,16 @@ export default function AdminListView<T extends object>({
 
         <Listbox value={activeSortIndex} onChange={handleSortChange}>
           <div className="relative">
-            <ListboxButton className="border-light-gray text-primary flex min-h-10 w-full items-center justify-between rounded-md border bg-white px-3 text-left text-sm">
+            <ListboxButton className="border-neutral-muted text-neutral-text bg-neutral-surface flex min-h-10 w-full items-center justify-between rounded-md border px-3 text-left text-sm">
               <span>{selectedSortLabel}</span>
               <ChevronsUpDown size={17} />
             </ListboxButton>
-            <ListboxOptions className="border-light-gray absolute z-20 mt-2 max-h-60 w-full overflow-auto rounded-md border bg-white p-1 shadow-lg">
+            <ListboxOptions className="border-neutral-muted bg-neutral-surface absolute z-20 mt-2 max-h-60 w-full overflow-auto rounded-md border p-1 shadow-lg">
               {sortOptions.map((option, index) => (
                 <ListboxOption
                   key={`${option.sortBy}-${option.sort}`}
                   value={index}
-                  className="text-primary data-focus:bg-primary-50 flex cursor-default items-center justify-between rounded-md px-3 py-2 text-sm"
+                  className="text-neutral-text data-focus:bg-primary-soft flex cursor-default items-center justify-between rounded-md px-3 py-2 text-sm"
                 >
                   {option.label}
                   {activeSortIndex === index ? <Check size={16} /> : null}
@@ -123,7 +123,7 @@ export default function AdminListView<T extends object>({
         </Listbox>
       </div>
       {items.length !== 0 && (
-        <div className="divide-light-gray border-light-gray divide-y rounded-lg border bg-white">
+        <div className="divide-neutral-muted border-neutral-muted bg-neutral-surface divide-y rounded-lg border">
           {items.map(renderItem)}
         </div>
       )}

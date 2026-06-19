@@ -71,9 +71,9 @@ export default function TransferSummaryPage() {
         description="Lengkapi detail transfer sebelum konfirmasi."
       />
       <Card className="max-w-2xl">
-        <div className="border-light-gray mb-3 rounded-md border p-4">
-          <p className="caption text-primary">Akun tujuan</p>
-          <p className="subheading text-primary mt-1">
+        <div className="border-neutral-muted mb-3 rounded-md border p-4">
+          <p className="caption text-neutral-text">Akun tujuan</p>
+          <p className="subheading text-neutral-text mt-1">
             {formatAccount(state.wallet.account_number)} -{" "}
             {state.wallet.user.full_name}
           </p>

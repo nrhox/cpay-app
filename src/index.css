@@ -2,28 +2,19 @@
 @plugin "@tailwindcss/forms";
 
 @theme {
-  --color-primary-50: #eef2ff;
-  --color-primary-100: #e0e7ff;
-  --color-primary-200: #c7d2ff;
-  --color-primary-300: #a4b3ff;
-  --color-primary-400: #7d87ff;
-  --color-primary-500: #625fff;
-  --color-primary-600: #4f39f6;
-  --color-primary-700: #432dd7;
-  --color-primary-800: #372aac;
-  --color-primary-900: #312c85;
-  --color-primary-950: #1e1a4d;
+  --color-primary: oklch(48.8% 0.243 264.376);
+  --color-primary-hover: oklch(42.4% 0.199 265.638);
+  --color-primary-contrast: #ffffff;
+  --color-primary-soft: oklch(97% 0.014 254.604);
 
-  --color-success: #15803d;
-  --color-warning: #b45309;
-  --color-danger: #dc2626;
+  --color-neutral-bg: #f6f8fb;
+  --color-neutral-surface: #ffffff;
+  --color-neutral-text: #000000;
+  --color-neutral-muted: #64748b;
 
-  --color-background: #f6f8fb;
-  --color-surface: #ffffff;
-
-  --color-primary: #111827;
-
-  --color-light-gray: #111827;
+  --color-success: oklch(62.7% 0.194 149.214);
+  --color-warning: oklch(68.1% 0.162 75.834);
+  --color-danger: oklch(63.7% 0.237 25.331);
 }
 
 body {
@@ -42,6 +33,25 @@ body {
   overflow-x: hidden;
   margin: 0;
   padding: 0;
+  @apply bg-neutral-bg;
+}
+
+/* Global Forms Integration */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="url"],
+input[type="search"],
+select,
+textarea {
+  @apply border-neutral-muted focus:ring-primary focus:border-primary;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  @apply text-primary focus:ring-primary border-neutral-muted;
 }
 
 .heading {
@@ -83,8 +93,7 @@ ul li a,
 }
 
 [aria-disabled="true"] {
-  opacity: 50%;
-  cursor: default;
+  @apply cursor-default opacity-50;
 }
 
 .loading {
