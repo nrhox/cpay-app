@@ -9,6 +9,8 @@ const messageMap: Record<string, string> = {
     "Email belum diverifikasi. Pastikan akun Anda aktif.",
   err_in_complate_user_register: "anda belum melengkapi formulir",
   err_github_api: "terjadi kesalahan saat masuk menggunakan github",
+  err_account_suspend:
+    "Akun anda ditangguhkan. Silakan hubungi pemilik aplikasi.",
 
   err_oauth_google_limit_or_cancel:
     "Akses ditolak atau kuota Google aplikasi ini habis. Silakan gunakan akun GitHub.",
