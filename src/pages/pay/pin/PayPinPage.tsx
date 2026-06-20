@@ -17,12 +17,14 @@ export default function PayPinPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [errorMessage, setError] = useState("");
+  const { refetch } = useGetAllWallet();
 
   const { data: dataPayCode, isLoading: isLoadingPay } =
     useFindPaymentCodeDetails(id);
   const { data: dataWallets, isLoading } = useGetAllWallet();
   const { mutate } = usePayPaymentCode({
     onSuccess: (data) => {
+      refetch();
       navigate("/transactions/" + data.data?.reference);
     },
     onError: (res) => {

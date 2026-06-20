@@ -5,6 +5,7 @@ import TransactionReview from "../../../components/transactions/TransactionRevie
 import Card from "../../../components/ui/Card";
 import PageHeader from "../../../components/ui/PageHeader";
 import { useTransferBalance } from "../../../feature/transaction";
+import { useGetAllWallet } from "../../../feature/wallet";
 import type { ITransferBalanceRequest } from "../../../types/request";
 import type { iError } from "../../../types/response";
 import type { IWalletWithUser } from "../../../types/wallet";
@@ -33,9 +34,11 @@ export default function TransferPinPage() {
   const location = useLocation();
   const transfer = location.state as TransferPinState | null;
   const [errorPin, setErrorPin] = useState("");
+  const { refetch } = useGetAllWallet();
 
   const { mutate, isPending, isSuccess } = useTransferBalance({
     onSuccess: (data) => {
+      refetch();
       navigate("/transactions/" + data.data?.reference || "", {
         replace: true,
       });
