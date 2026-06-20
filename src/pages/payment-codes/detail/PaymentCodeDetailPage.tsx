@@ -32,7 +32,11 @@ export default function PaymentCodeDetailPage() {
           </Link>
         }
       />
-      <PaymentCodeCard paymentCode={data?.data || undefined} />
+      <PaymentCodeCard
+        symbol="qr_code"
+        paymentCode={data?.data || undefined}
+        copyIcon={true}
+      />
       <TransactionReview
         className="max-w-none"
         items={[

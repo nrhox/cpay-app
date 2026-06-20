@@ -51,7 +51,11 @@ export default function WalletDetailPage() {
           </Link>
         }
       />
-      <WalletCard wallet={dataWallet?.data} />
+      <WalletCard
+        wallet={dataWallet?.data}
+        copyIcon={true}
+        active={dataWallet?.data?.status === "ACTIVE"}
+      />
       <Card>
         <h2 className="subheading">Rincian rekening</h2>
         <div className="text-neutral-text mt-3 grid gap-2 text-sm sm:grid-cols-2">
